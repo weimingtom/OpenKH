@@ -115,7 +115,7 @@ namespace Kh
                         c <<= 1;
                 }
                 strIndex++;
-            } while (str[strIndex] != '\0');
+            } while (strIndex < str.Length);
 
             return ~c;
         }
@@ -185,11 +185,11 @@ namespace Kh
             for (int i = 0; i < filesCount; i++)
             {
                 streamIdx.Read(dataIdx, 0, dataIdx.Length);
-                idx[i].hash32 = ByteToInt(data, 0, 4);
-                idx[i].hash16 = ByteToInt(data, 4, 2);
-                idx[i].clength = ByteToInt(data, 6, 2);
-                idx[i].position = ByteToInt(data, 8, 4);
-                idx[i].length = ByteToInt(data, 12, 4);
+                idx[i].hash32 = ByteToInt(dataIdx, 0, 4);
+                idx[i].hash16 = ByteToInt(dataIdx, 4, 2);
+                idx[i].clength = ByteToInt(dataIdx, 6, 2);
+                idx[i].position = ByteToInt(dataIdx, 8, 4);
+                idx[i].length = ByteToInt(dataIdx, 12, 4);
 
                 idx[i].streamed = (idx[i].clength & 0x4000) != 0;
                 idx[i].compressed = (idx[i].clength & 0x8000) != 0;

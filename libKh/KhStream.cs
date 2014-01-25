@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Kh
 {
-    class KhFileStream : System.IO.Stream
+    public class FileStream : System.IO.Stream
     {
         IDX.FileEntry entry;
 
@@ -14,7 +14,7 @@ namespace Kh
         /// </summary>
         /// <param name="idx">IDX object</param>
         /// <param name="filename">name of the file to open</param>
-        public KhFileStream(IDX idx, string filename)
+        public FileStream(IDX idx, string filename)
         {
             position = 0;
             entry = idx.OpenFile(filename);
