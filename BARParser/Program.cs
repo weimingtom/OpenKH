@@ -15,6 +15,9 @@ namespace BARParser
             Kh.FileStream file = new Kh.FileStream(idx, @"msg/jp/sys.bar");
             Console.WriteLine("File size: " + file.Length.ToString());
 
+            Kh.Bar msgSys = new Kh.Bar(file);
+            Console.WriteLine("BAR files: " + msgSys.Count);
+
             Console.ReadLine();
         }
     }

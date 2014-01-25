@@ -74,15 +74,15 @@ namespace Kh
             /// <summary>
             /// Real position of file inside the IMG, 2048 bytes aligned
             /// </summary>
-            public int position;
+            public long position;
             /// <summary>
             /// Length of uncompressed file
             /// </summary>
-            public int length;
+            public long length;
             /// <summary>
             /// Length of file inside the IMG, 2048 bytes aligned
             /// </summary>
-            public int clength;
+            public long clength;
             /// <summary>
             /// Flag that explains if the current file is compressed
             /// </summary>
@@ -148,21 +148,6 @@ namespace Kh
             return (~s1) & 0xFFFF;
         }
 
-        /// <summary>
-        /// Annoying method that converts a portion of bytes to an integer value
-        /// </summary>
-        /// <param name="array">array where to extract the integer value</param>
-        /// <param name="offset">start index</param>
-        /// <param name="length">number of elements to process</param>
-        /// <returns>integer value</returns>
-        private static int ByteToInt(byte[] array, int offset, int length)
-        {
-            int n = 0;
-            for (int i = 0; i < length; i++)
-                n |= array[offset + i] << (8 * i);
-            return n;
-        }
-
         Stream streamImg;
         int filesCount;
         FileIdx[] idx;
@@ -177,7 +162,7 @@ namespace Kh
             // First 4 bytes are the entries count
             byte[] data = new byte[4];
             streamIdx.Read(data, 0, data.Length);
-            filesCount = ByteToInt(data, 0, 4);
+            filesCount = Data.ByteToInt(data, 0, 4);
             idx = new FileIdx[filesCount];
 
             // Parse IDX file
@@ -185,15 +170,15 @@ namespace Kh
             for (int i = 0; i < filesCount; i++)
             {
                 streamIdx.Read(dataIdx, 0, dataIdx.Length);
-                idx[i].hash32 = ByteToInt(dataIdx, 0, 4);
-                idx[i].hash16 = ByteToInt(dataIdx, 4, 2);
-                idx[i].clength = ByteToInt(dataIdx, 6, 2);
-                idx[i].position = ByteToInt(dataIdx, 8, 4);
-                idx[i].length = ByteToInt(dataIdx, 12, 4);
+                idx[i].hash32 = Data.ByteToInt(dataIdx, 0, 4);
+                idx[i].hash16 = Data.ByteToInt(dataIdx, 4, 2);
+                idx[i].clength = Data.ByteToInt(dataIdx, 6, 2);
+                idx[i].position = Data.ByteToInt(dataIdx, 8, 4);
+                idx[i].length = Data.ByteToInt(dataIdx, 12, 4);
 
                 idx[i].streamed = (idx[i].clength & 0x4000) != 0;
                 idx[i].compressed = (idx[i].clength & 0x8000) != 0;
-                idx[i].clength = (idx[i].clength & 0x3FFF) * 0x800;
+                idx[i].clength = (idx[i].clength & 0x3FFF) * 0x800 + 0x800;
                 idx[i].position *= 0x800;
             }
 

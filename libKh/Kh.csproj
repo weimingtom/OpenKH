@@ -7,8 +7,8 @@
     <ProjectGuid>{605C4D6B-6E02-4BF3-8A91-DB2DDB3ACD8A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>libKh</RootNamespace>
-    <AssemblyName>libKh</AssemblyName>
+    <RootNamespace>Kh</RootNamespace>
+    <AssemblyName>Kh</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bar.cs" />
     <Compile Include="IDX.cs" />
     <Compile Include="KhStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Data.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
