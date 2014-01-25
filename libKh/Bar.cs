@@ -25,7 +25,7 @@ namespace Kh
         /// <summary>
         /// Type of files
         /// TODO INCOMPLETE LIST
-        /// Thanks to Govanif for this
+        /// Thanks to GovanifY for this
         /// </summary>
         public enum Type
         {
