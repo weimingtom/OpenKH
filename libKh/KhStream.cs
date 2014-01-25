@@ -5,26 +5,31 @@ namespace Kh
 {
     class KhFileStream : System.IO.Stream
     {
-        Stream internalStream;
-        long internalPosition;
+        IDX.FileEntry entry;
 
-        long virtualPosition;
-        long virtualLength;
+        long position;
 
+        /// <summary>
+        /// Open a Kingdom Hearts' file stream
+        /// </summary>
+        /// <param name="idx">IDX object</param>
+        /// <param name="filename">name of the file to open</param>
         public KhFileStream(IDX idx, string filename)
         {
-            internalPosition = 0;
-            virtualPosition = 0;
+            position = 0;
+            entry = idx.OpenFile(filename);
+            if (entry.index == -1)
+                throw new System.IO.FileNotFoundException();
         }
 
         public override long Position
         {
-            get { return virtualPosition; }
-            set { virtualPosition = value; }
+            get { return position; }
+            set { if (CanSeek) position = value; }
         }
         public override long Length
         {
-            get { return virtualLength; }
+            get { return entry.length; }
         }
         public override bool CanRead
         {
@@ -32,7 +37,7 @@ namespace Kh
         }
         public override bool CanSeek
         {
-            get { return true; }
+            get { return entry.streamed == false; }
         }
         public override bool CanWrite
         {
@@ -41,6 +46,15 @@ namespace Kh
 
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (CanRead)
+            {
+                if (Position + count > Length)
+                    count = (int)(Length - Position);
+                entry.stream.Position = entry.position + Position;
+                entry.stream.Read(buffer, offset, count);
+                position += count;
+                return count;
+            }
             return 0;
         }
         public override void Write(byte[] buffer, int offset, int count)
@@ -58,17 +72,20 @@ namespace Kh
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            switch (origin)
+            if (CanSeek)
             {
-                case SeekOrigin.Begin:
-                    Position = offset;
-                    break;
-                case SeekOrigin.Current:
-                    Position += offset;
-                    break;
-                case SeekOrigin.End:
-                    Position = Length + offset;
-                    break;
+                switch (origin)
+                {
+                    case SeekOrigin.Begin:
+                        Position = offset;
+                        break;
+                    case SeekOrigin.Current:
+                        Position += offset;
+                        break;
+                    case SeekOrigin.End:
+                        Position = Length + offset;
+                        break;
+                }
             }
             return Position;
         }
