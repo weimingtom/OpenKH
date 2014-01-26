@@ -17,7 +17,12 @@ namespace BARParser
 
             Kh.Bar msgSys = new Kh.Bar(file);
             Console.WriteLine("BAR files: " + msgSys.Count);
-
+            for (int i = 0; i < msgSys.Count; i++)
+            {
+                Console.WriteLine(
+                    "[" + i.ToString() + "] " + 
+                    msgSys.GetName(i) + " Type " + msgSys.GetType(i).ToString());
+            }
             Console.ReadLine();
         }
     }
