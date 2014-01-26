@@ -120,11 +120,14 @@ namespace Kh
         {
             char[] ch = new char[4];
             int nName = entries[index].name;
-            ch[0] = (char)((nName >> 0) & 0xFF);
-            ch[1] = (char)((nName >> 8) & 0xFF);
-            ch[2] = (char)((nName >> 16) & 0xFF);
-            ch[3] = (char)((nName >> 24) & 0xFF);
-            return new String(ch);
+            int strLength = 0;
+            for (strLength = 0; strLength < ch.Length; strLength++)
+            {
+                ch[strLength] = (char)((nName >> (strLength * 8)) & 0xFF);
+                if (ch[strLength] == '\0')
+                    break;
+            }
+            return new String(ch, 0, strLength);
         }
 
         /// <summary>

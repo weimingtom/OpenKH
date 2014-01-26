@@ -22,6 +22,13 @@ namespace BARParser
                 Console.WriteLine(
                     "[" + i.ToString() + "] " + 
                     msgSys.GetName(i) + " Type " + msgSys.GetType(i).ToString());
+
+                FileStream fDump = new FileStream(msgSys.GetName(i), FileMode.Create);
+                Stream stream = msgSys.GetData(i);
+                byte[] data = new byte[stream.Length];
+                stream.Read(data, 0, data.Length);
+                fDump.Write(data, 0, data.Length);
+                fDump.Close();
             }
             Console.ReadLine();
         }
