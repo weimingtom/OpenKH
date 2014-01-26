@@ -32,7 +32,7 @@ namespace Kh
         {
             Temp = 0x00,
             BAR = 0x01,
-            String = 0x02,
+            MSG = 0x02,
             AI = 0x03,
             MDLX = 0x04,
             DOCT = 0x05,

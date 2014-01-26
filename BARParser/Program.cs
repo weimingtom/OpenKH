@@ -12,6 +12,8 @@ namespace BARParser
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IDX", FileMode.Open, FileAccess.Read),
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IMG", FileMode.Open, FileAccess.Read));
 
+            Kh.Msg msg = new Kh.Msg();
+
             Stream file = idx.OpenFile(@"msg/jp/sys.bar");
             Console.WriteLine("File size: " + file.Length.ToString());
 
@@ -29,6 +31,12 @@ namespace BARParser
                 stream.Read(data, 0, data.Length);
                 fDump.Write(data, 0, data.Length);
                 fDump.Close();
+                stream.Position = 0;
+
+                if (msgSys.GetType(i) == Kh.Bar.Type.MSG)
+                {
+                    msg.Add(stream);
+                }
             }
             Console.ReadLine();
         }
