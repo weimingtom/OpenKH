@@ -17,7 +17,7 @@ namespace Kh
         }
         struct Entry
         {
-            public int dunno;
+            public int type;
             public int name;
             public int position;
             public int size;
@@ -65,6 +65,7 @@ namespace Kh
 
         Header header;
         Entry[] entries;
+        Stream stream;
 
         public Bar(Stream stream)
         {
@@ -85,15 +86,58 @@ namespace Kh
                 for (int i = 0; i < header.count; i++)
                 {
                     stream.Read(data, 0, data.Length);
-                    entries[i].dunno = Data.ByteToInt(data, 0, 4);
+                    entries[i].type = Data.ByteToInt(data, 0, 4);
                     entries[i].name = Data.ByteToInt(data, 4, 4);
                     entries[i].position = Data.ByteToInt(data, 8, 4);
                     entries[i].size = Data.ByteToInt(data, 12, 4);
                 }
             }
+            this.stream = stream;
         }
 
+        /// <summary>
+        /// Number of files inside BAR
+        /// </summary>
         public int Count
         { get { return header.count; } }
+
+        /// <summary>
+        /// Check file type of specified file index inside BAR
+        /// </summary>
+        /// <param name="index">index of file; from 0 to Count</param>
+        /// <returns>File type</returns>
+        public Type GetType(int index)
+        {
+            return (Type)entries[index].type;
+        }
+
+        /// <summary>
+        /// Check file name of specified file index inside BAR
+        /// </summary>
+        /// <param name="index">index of file; from 0 to Count</param>
+        /// <returns>File name</returns>
+        public string GetName(int index)
+        {
+            char[] ch = new char[4];
+            int nName = entries[index].name;
+            ch[0] = (char)((nName >> 0) & 0xFF);
+            ch[1] = (char)((nName >> 8) & 0xFF);
+            ch[2] = (char)((nName >> 16) & 0xFF);
+            ch[3] = (char)((nName >> 24) & 0xFF);
+            return new String(ch);
+        }
+
+        /// <summary>
+        /// Get data from specified file index inside BAR
+        /// </summary>
+        /// <param name="index">index of file; from 0 to Count</param>
+        /// <returns>stream data from specified file</returns>
+        public Stream GetData(int index)
+        {
+            byte[] data = new byte[entries[index].size];
+            stream.Position = entries[index].position;
+            stream.Read(data, 0, data.Length);
+            return new MemoryStream(data);
+        }
     }
 }
