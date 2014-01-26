@@ -4,6 +4,7 @@ using System.IO;
 
 namespace Kh
 {
+<<<<<<< HEAD
     /// <summary>
     /// Process IDX files
     /// </summary>
@@ -12,6 +13,10 @@ namespace Kh
         /// <summary>
         /// Used to get a file entry from IDX
         /// </summary>
+=======
+    public class IDX
+    {
+>>>>>>> parent of 906e419... BAR Editor
         public struct FileEntry
         {
             /// <summary>
@@ -41,7 +46,11 @@ namespace Kh
             /// <summary>
             /// Real length of the file inside
             /// </summary>
+<<<<<<< HEAD
             public long length;
+=======
+            public long vlength;
+>>>>>>> parent of 906e419... BAR Editor
             /// <summary>
             /// Length of the file inside IMG stream
             /// </summary>
@@ -55,6 +64,7 @@ namespace Kh
             /// </summary>
             public bool streamed;
         }
+<<<<<<< HEAD
 
         /// <summary>
         /// Readable and x86 aligned structure from IDX
@@ -146,12 +156,40 @@ namespace Kh
                 }
             }
             return (~s1) & 0xFFFF;
+=======
+        struct FileIdx
+        {
+            public int hash32;
+            public int hash16;
+            public int position;
+            public int vlength;
+            public int length;
+            public bool compressed;
+            public bool streamed;
+        }
+
+        static int CalculateHash32(string str)
+        {
+            return 0;
+        }
+        static int CalculateHash16(string str)
+        {
+            return 0;
+        }
+        private static int ByteToInt(byte[] array)
+        {
+            int n = 0;
+            for (int i = 0; i < array.Length; i++)
+                n |= array[i] << (8 * i);
+            return n;
+>>>>>>> parent of 906e419... BAR Editor
         }
 
         Stream streamImg;
         int filesCount;
         FileIdx[] idx;
 
+<<<<<<< HEAD
         /// <summary>
         /// Parse an IDX file
         /// </summary>
@@ -191,6 +229,21 @@ namespace Kh
         /// </summary>
         /// <param name="filename">name of the file to open</param>
         /// <returns>file entry, compatible with KhStream</returns>
+=======
+        public IDX(System.IO.Stream streamIdx, System.IO.Stream streamImg)
+        {
+            byte[] data = new byte[4];
+            streamIdx.Read(data, 0, data.Length);
+            filesCount = ByteToInt(data);
+            idx = new FileIdx[filesCount];
+            for (int i = 0; i < filesCount; i++)
+            {
+                // TODO read the idx structure inside FileIdx[]
+            }
+            this.streamImg = streamImg;
+        }
+
+>>>>>>> parent of 906e419... BAR Editor
         public FileEntry OpenFile(string filename)
         {
             FileEntry entry = new FileEntry();
@@ -202,27 +255,39 @@ namespace Kh
             if (entry.index >= 0)
             {
                 entry.position = idx[entry.index].position;
+<<<<<<< HEAD
                 entry.length = idx[entry.index].length;
                 entry.clength = idx[entry.index].clength;
+=======
+                entry.vlength = idx[entry.index].vlength;
+                entry.clength = idx[entry.index].length;
+>>>>>>> parent of 906e419... BAR Editor
                 entry.compressed = idx[entry.index].compressed;
                 entry.streamed = idx[entry.index].streamed;
             }
             return entry;
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Search the hashes inside the IDX structure
         /// </summary>
         /// <param name="hash32">32-bit hash to search</param>
         /// <param name="hash16">16-bit hash to search</param>
         /// <returns>IDX index that contains the file description</returns>
+=======
+>>>>>>> parent of 906e419... BAR Editor
         private int SearchHashes(int hash32, int hash16)
         {
             for (int i = 0; i < filesCount; i++)
             {
                 if (idx[i].hash32 == hash32 &&
                     idx[i].hash16 == hash16)
+<<<<<<< HEAD
                     return i;
+=======
+                    return 0;
+>>>>>>> parent of 906e419... BAR Editor
             }
             return -1;
         }
