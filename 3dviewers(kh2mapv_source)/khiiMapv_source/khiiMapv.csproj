@@ -1,10 +1,10 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <ProjectType>local</ProjectType>
     <ProjectVersion>7.10.377</ProjectVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>dd564f4e-5123-4fd2-99d4-caefe276cd3b</ProjectGuid>
+    <ProjectGuid>{1E3DB7B7-CECD-4C5A-BEDE-AB7B94FB16F4}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <AssemblyName>khiiMapv</AssemblyName>
     <OutputType>WinExe</OutputType>
@@ -67,16 +67,24 @@
     <Compile Include="khiiMapv\Parse02\StrDec.cs" />
     <Compile Include="khiiMapv\Parse02\StrCode.cs" />
     <Compile Include="khiiMapv\Parse02\StrCodeCollection.cs" />
-    <Compile Include="khiiMapv\Visf.cs" />
+    <Compile Include="khiiMapv\Visf.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="khiiMapv\Put\IPuteffect.cs" />
     <Compile Include="khiiMapv\Put\Putfragment.cs" />
     <Compile Include="khiiMapv\Put\Putvi.cs" />
     <Compile Include="khiiMapv\Put\Putbox.cs" />
     <Compile Include="Readmset\PgScrollType.cs" />
-    <Compile Include="Readmset\HexVwer.cs" />
+    <Compile Include="Readmset\HexVwer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Readmset\RangeMarked.cs" />
-    <Compile Include="hex04BinTrack\UC.cs" />
-    <Compile Include="khiiMapv\RDForm.cs" />
+    <Compile Include="hex04BinTrack\UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="khiiMapv\RDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="khiiMapv\Vifpli.cs" />
     <Compile Include="khiiMapv\M4.cs" />
     <Compile Include="khiiMapv\MTex.cs" />
@@ -108,7 +116,9 @@
     <Compile Include="khkh_xldMii\Mx\RUtil.cs" />
     <Compile Include="khkh_xldMii\Mx\UtilAxBoneReader.cs" />
     <Compile Include="khkh_xldMii\Mx\Mdlxfst.cs" />
-    <Compile Include="khiiMapv\BEXForm.cs" />
+    <Compile Include="khiiMapv\BEXForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="hex04BinTrack.UC.resources" />
     <EmbeddedResource Include="Readmset.HexVwer.resources" />
     <EmbeddedResource Include="khiiMapv.BEXForm.resources" />

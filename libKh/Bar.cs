@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Kh
 {
@@ -65,7 +66,7 @@ namespace Kh
         Header header;
         Entry[] entries;
 
-        public Bar(FileStream stream)
+        public Bar(Stream stream)
         {
             byte[] data = new byte[0x10];
             stream.Read(data, 0, data.Length);
@@ -78,14 +79,17 @@ namespace Kh
             if (header.magic != MagicCode)
                 throw new System.IO.InvalidDataException();
 
-            entries = new Entry[header.count];
-            for (int i = 0; i < header.count; i++)
+            if (header.count != 0)
             {
-                stream.Read(data, 0, data.Length);
-                entries[i].dunno = Data.ByteToInt(data, 0, 4);
-                entries[i].name = Data.ByteToInt(data, 4, 4);
-                entries[i].position = Data.ByteToInt(data, 8, 4);
-                entries[i].size = Data.ByteToInt(data, 12, 4);
+                entries = new Entry[header.count];
+                for (int i = 0; i < header.count; i++)
+                {
+                    stream.Read(data, 0, data.Length);
+                    entries[i].dunno = Data.ByteToInt(data, 0, 4);
+                    entries[i].name = Data.ByteToInt(data, 4, 4);
+                    entries[i].position = Data.ByteToInt(data, 8, 4);
+                    entries[i].size = Data.ByteToInt(data, 12, 4);
+                }
             }
         }
 

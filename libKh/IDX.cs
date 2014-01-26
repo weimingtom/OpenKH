@@ -4,68 +4,11 @@ using System.IO;
 
 namespace Kh
 {
-<<<<<<< HEAD
     /// <summary>
     /// Process IDX files
     /// </summary>
     public class IDX
     {
-        /// <summary>
-        /// Used to get a file entry from IDX
-        /// </summary>
-=======
-    public class IDX
-    {
->>>>>>> parent of 906e419... BAR Editor
-        public struct FileEntry
-        {
-            /// <summary>
-            /// Filename of file entry
-            /// </summary>
-            public string filename;
-            /// <summary>
-            /// 32-bit hash of filename
-            /// </summary>
-            public int hash1;
-            /// <summary>
-            /// 16-bit hash of filename
-            /// </summary>
-            public int hash2;
-            /// <summary>
-            /// IMG stream
-            /// </summary>
-            public Stream stream;
-            /// <summary>
-            /// Index of file entry on IDX
-            /// </summary>
-            public int index;
-            /// <summary>
-            /// Position of the file inside IMG stream
-            /// </summary>
-            public long position;
-            /// <summary>
-            /// Real length of the file inside
-            /// </summary>
-<<<<<<< HEAD
-            public long length;
-=======
-            public long vlength;
->>>>>>> parent of 906e419... BAR Editor
-            /// <summary>
-            /// Length of the file inside IMG stream
-            /// </summary>
-            public long clength;
-            /// <summary>
-            /// true if the file is compressed
-            /// </summary>
-            public bool compressed;
-            /// <summary>
-            /// true if the file is loaded in stream-mode and not directly
-            /// </summary>
-            public bool streamed;
-        }
-<<<<<<< HEAD
-
         /// <summary>
         /// Readable and x86 aligned structure from IDX
         /// </summary>
@@ -156,40 +99,12 @@ namespace Kh
                 }
             }
             return (~s1) & 0xFFFF;
-=======
-        struct FileIdx
-        {
-            public int hash32;
-            public int hash16;
-            public int position;
-            public int vlength;
-            public int length;
-            public bool compressed;
-            public bool streamed;
-        }
-
-        static int CalculateHash32(string str)
-        {
-            return 0;
-        }
-        static int CalculateHash16(string str)
-        {
-            return 0;
-        }
-        private static int ByteToInt(byte[] array)
-        {
-            int n = 0;
-            for (int i = 0; i < array.Length; i++)
-                n |= array[i] << (8 * i);
-            return n;
->>>>>>> parent of 906e419... BAR Editor
         }
 
         Stream streamImg;
         int filesCount;
         FileIdx[] idx;
 
-<<<<<<< HEAD
         /// <summary>
         /// Parse an IDX file
         /// </summary>
@@ -197,25 +112,23 @@ namespace Kh
         /// <param name="streamImg">stream that contains IMG data</param>
         public IDX(System.IO.Stream streamIdx, System.IO.Stream streamImg)
         {
+            BinaryReader reader = new BinaryReader(streamIdx);
+
             // First 4 bytes are the entries count
-            byte[] data = new byte[4];
-            streamIdx.Read(data, 0, data.Length);
-            filesCount = Data.ByteToInt(data, 0, 4);
+            filesCount = reader.ReadInt32();
             idx = new FileIdx[filesCount];
 
             // Parse IDX file
-            byte[] dataIdx = new byte[0x10];
             for (int i = 0; i < filesCount; i++)
             {
-                streamIdx.Read(dataIdx, 0, dataIdx.Length);
-                idx[i].hash32 = Data.ByteToInt(dataIdx, 0, 4);
-                idx[i].hash16 = Data.ByteToInt(dataIdx, 4, 2);
-                idx[i].clength = Data.ByteToInt(dataIdx, 6, 2);
-                idx[i].position = Data.ByteToInt(dataIdx, 8, 4);
-                idx[i].length = Data.ByteToInt(dataIdx, 12, 4);
+                idx[i].hash32 = reader.ReadInt32();
+                idx[i].hash16 = reader.ReadInt16();
+                idx[i].clength = reader.ReadInt16();
+                idx[i].position = reader.ReadInt32();
+                idx[i].length = reader.ReadInt32();
 
-                idx[i].streamed = (idx[i].clength & 0x4000) != 0;
-                idx[i].compressed = (idx[i].clength & 0x8000) != 0;
+                idx[i].compressed = (idx[i].clength & 0x4000) != 0;
+                idx[i].streamed = (idx[i].clength & 0x8000) != 0;
                 idx[i].clength = (idx[i].clength & 0x3FFF) * 0x800 + 0x800;
                 idx[i].position *= 0x800;
             }
@@ -225,69 +138,108 @@ namespace Kh
         }
 
         /// <summary>
-        /// Open a file inside IDX / IMG
+        /// Get stream from the specified filename
         /// </summary>
-        /// <param name="filename">name of the file to open</param>
-        /// <returns>file entry, compatible with KhStream</returns>
-=======
-        public IDX(System.IO.Stream streamIdx, System.IO.Stream streamImg)
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public Stream OpenFile(string filename)
         {
-            byte[] data = new byte[4];
-            streamIdx.Read(data, 0, data.Length);
-            filesCount = ByteToInt(data);
-            idx = new FileIdx[filesCount];
-            for (int i = 0; i < filesCount; i++)
+            int hash1 = CalculateHash32(filename);
+            int hash2 = CalculateHash16(filename);
+            int index = SearchHashes(hash1, hash2);
+
+            if (index >= 0)
             {
-                // TODO read the idx structure inside FileIdx[]
+                if (idx[index].compressed == true)
+                {
+                    return Uncompress(streamImg, idx[index].position,
+                        idx[index].clength, idx[index].length);
+                }
+                else
+                {
+                    byte[] data = new byte[idx[index].length];
+                    streamImg.Position = idx[index].position;
+                    streamImg.Read(data, 0, data.Length);
+                    return new MemoryStream(data);
+                }
             }
-            this.streamImg = streamImg;
+            throw new System.IO.FileNotFoundException();
         }
 
->>>>>>> parent of 906e419... BAR Editor
-        public FileEntry OpenFile(string filename)
+        private Stream Uncompress(Stream streamIn, long offset, long srcSize, long dstSize)
         {
-            FileEntry entry = new FileEntry();
-            entry.filename = filename;
-            entry.hash1 = CalculateHash32(filename);
-            entry.hash2 = CalculateHash16(filename);
-            entry.stream = streamImg;
-            entry.index = SearchHashes(entry.hash1, entry.hash2);
-            if (entry.index >= 0)
+            byte[] dstData = new byte[dstSize];
+
+            // srcSize needs to be 2048 bytes aligned in order to work
+            if ((srcSize & 0x7FF) == 0)
             {
-                entry.position = idx[entry.index].position;
-<<<<<<< HEAD
-                entry.length = idx[entry.index].length;
-                entry.clength = idx[entry.index].clength;
-=======
-                entry.vlength = idx[entry.index].vlength;
-                entry.clength = idx[entry.index].length;
->>>>>>> parent of 906e419... BAR Editor
-                entry.compressed = idx[entry.index].compressed;
-                entry.streamed = idx[entry.index].streamed;
+                byte[] srcData = new byte[srcSize];
+                streamIn.Position = offset + srcSize - srcData.Length;
+                streamIn.Read(srcData, 0, srcData.Length);
+
+                long srcPos = srcSize;
+                long dstPos = dstSize;
+                byte key = 0;
+
+                // Find decompression key from the end of file 
+                while (srcPos > 0)
+                {
+                    // The key is never 0
+                    byte data = srcData[--srcPos];
+                    if (data != 0x00)
+                    {
+                        key = data;
+                        break;
+                    }
+                }
+
+                // Skip file length
+                srcPos -= 4;
+
+                while (srcPos > 0 && dstPos > 0)
+                {
+                    byte data = srcData[--srcPos];
+                    if (data == key)
+                    {
+                        byte copyPos = srcData[--srcPos];
+                        if (copyPos != 0)
+                        {
+                            for (int i = srcData[--srcPos] + 2; i >= 0; i--)
+                            {
+                                if (dstPos > 0)
+                                    dstData[--dstPos] = dstData[dstPos + copyPos];
+                                else
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            dstData[--dstPos] = data;
+                        }
+                    }
+                    else
+                    {
+                        dstData[--dstPos] = data;
+                    }
+                }
+                srcPos = srcPos;
             }
-            return entry;
+            return new MemoryStream(dstData);
         }
 
-<<<<<<< HEAD
         /// <summary>
         /// Search the hashes inside the IDX structure
         /// </summary>
         /// <param name="hash32">32-bit hash to search</param>
         /// <param name="hash16">16-bit hash to search</param>
         /// <returns>IDX index that contains the file description</returns>
-=======
->>>>>>> parent of 906e419... BAR Editor
         private int SearchHashes(int hash32, int hash16)
         {
             for (int i = 0; i < filesCount; i++)
             {
                 if (idx[i].hash32 == hash32 &&
                     idx[i].hash16 == hash16)
-<<<<<<< HEAD
                     return i;
-=======
-                    return 0;
->>>>>>> parent of 906e419... BAR Editor
             }
             return -1;
         }
