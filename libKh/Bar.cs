@@ -40,7 +40,6 @@ namespace Kh
             TIM2 = 0x0A,
             COCT_2 = 0x0B,
             SPWN = 0x0C,
-            BIN = 0x0D,
             SKY = 0x0E,
             COCT_3 = 0x0F,
             BAR_2 = 0x11,
@@ -51,7 +50,17 @@ namespace Kh
             IMGD = 0x18,
             SEQD = 0x19,
             LAYERD = 0x1C,
-        }
+            IMGZ = 0x1D,
+            BAR_4  = 0x1E,
+            SEB = 0x1F,
+            WD = 0x20,
+            VSB = 0x22,
+            TBMP = 0x24,
+            BAR_5 = 0x2E,
+            VIBD = 0x2F,
+            VAG = 0x30
+
+        } 
 
         Header header;
         Entry[] entries;
