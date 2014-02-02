@@ -222,7 +222,6 @@ namespace Kh
                         dstData[--dstPos] = data;
                     }
                 }
-                srcPos = srcPos;
             }
             return new MemoryStream(dstData);
         }
