@@ -2,7 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
-VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kh", "libKh\Kh.csproj", "{605C4D6B-6E02-4BF3-8A91-DB2DDB3ACD8A}"
 EndProject
@@ -11,6 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{59CE7840-4054-4D43-8C74-D73420FFD309}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BARParser", "BARParser\BARParser.csproj", "{7787A632-4EE2-4313-A383-C4A12285EF89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TM2Loader", "TM2Loader\TM2Loader.csproj", "{8D2672ED-99A2-434B-9AB2-479829638849}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,11 +27,16 @@ Global
 		{7787A632-4EE2-4313-A383-C4A12285EF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7787A632-4EE2-4313-A383-C4A12285EF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7787A632-4EE2-4313-A383-C4A12285EF89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2672ED-99A2-434B-9AB2-479829638849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2672ED-99A2-434B-9AB2-479829638849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2672ED-99A2-434B-9AB2-479829638849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2672ED-99A2-434B-9AB2-479829638849}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7787A632-4EE2-4313-A383-C4A12285EF89} = {59CE7840-4054-4D43-8C74-D73420FFD309}
+		{8D2672ED-99A2-434B-9AB2-479829638849} = {59CE7840-4054-4D43-8C74-D73420FFD309}
 	EndGlobalSection
 EndGlobal
