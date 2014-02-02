@@ -286,6 +286,12 @@ namespace Kh
                             imgData[i * 4 + 2] = tmp;
                         }
                         break;
+                    case PixelFormat.Format4bppIndexed:
+                        for (int i = 0; i < pic.width * pic.height / 2; i++)
+                        {
+                            imgData[i] = (byte)(((imgData[i] & 0x0F) << 4) | (imgData[i] >> 4));
+                        }
+                        break;
                 }
 
                 IntPtr ptr;
@@ -303,6 +309,16 @@ namespace Kh
                 for (int i = 0; i < pic.howPal; i++)
                 {
                     palette[i] = Color.FromArgb(reader.ReadInt32());
+                }
+                if (image.PixelFormat == PixelFormat.Format4bppIndexed ||
+                    image.PixelFormat == PixelFormat.Format8bppIndexed)
+                {
+                    ColorPalette colorPalette = image.Palette;
+                    for (int i = 0; i < colorPalette.Entries.Length; i++)
+                    {
+                        colorPalette.Entries[i] = palette[i];
+                    }
+                    image.Palette = colorPalette;
                 }
             }
             else throw new InvalidDataException("Invalid magic code " + header.magicCode.ToString("X08"));

@@ -27,5 +27,15 @@ namespace TM2Loader
                 panelImage.BackgroundImage = tm2.Image;
             }
         }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "TIM2 files|*.tm2";
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                panelImage.BackgroundImage.Save(saveFileDialog.FileName);
+            }
+        }
     }
 }
