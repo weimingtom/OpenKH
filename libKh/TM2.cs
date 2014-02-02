@@ -168,6 +168,8 @@ namespace Kh
                 {
                     switch (imgFormat)
                     {
+                        case 2:
+                            return PixelFormat.Format24bppRgb;
                         case 3:
                             return PixelFormat.Format32bppArgb;
                         case 4:
@@ -175,7 +177,7 @@ namespace Kh
                         case 5:
                             return PixelFormat.Format8bppIndexed;
                     }
-                    return PixelFormat.Undefined;
+                    throw new Exception(String.Format("imgFormat {0} not recognized", imgFormat));
                 }
             }
             public int BitsPerPixel
@@ -184,6 +186,8 @@ namespace Kh
                 {
                     switch (imgFormat)
                     {
+                        case 2:
+                            return 24;
                         case 3:
                             return 32;
                         case 4:
@@ -209,7 +213,7 @@ namespace Kh
                         case 3:
                             return PixelFormat.Format32bppArgb;
                     }
-                    return PixelFormat.Undefined;
+                    throw new Exception(String.Format("palFormat {0} not recognized", imgFormat));
                 }
             }
 
@@ -276,23 +280,7 @@ namespace Kh
                 // Parse image
                 byte[] imgData = new byte[pic.imgSize];
                 stream.Read(imgData, 0, pic.imgSize);
-                switch (pic.ImageFormat)
-                {
-                    case PixelFormat.Format32bppArgb:
-                        for (int i = 0; i < pic.width * pic.height; i++)
-                        {
-                            byte tmp = imgData[i * 4 + 0];
-                            imgData[i * 4 + 0] = imgData[i * 4 + 2];
-                            imgData[i * 4 + 2] = tmp;
-                        }
-                        break;
-                    case PixelFormat.Format4bppIndexed:
-                        for (int i = 0; i < pic.width * pic.height / 2; i++)
-                        {
-                            imgData[i] = (byte)(((imgData[i] & 0x0F) << 4) | (imgData[i] >> 4));
-                        }
-                        break;
-                }
+                InvertRedBlueChannels(imgData, pic.ImageFormat);
 
                 IntPtr ptr;
                 unsafe
@@ -306,10 +294,23 @@ namespace Kh
 
                 // Parse palette
                 palette = new Color[pic.howPal];
-                for (int i = 0; i < pic.howPal; i++)
+                switch (pic.PaletteFormat)
                 {
-                    palette[i] = Color.FromArgb(reader.ReadInt32());
+                    case PixelFormat.Undefined:
+                        break;
+                    case PixelFormat.Format32bppArgb:
+                        for (int i = 0; i < pic.howPal; i++)
+                        {
+                            palette[i] = Color.FromArgb(reader.ReadInt32());
+                            palette[i] = Color.FromArgb(palette[i].A, palette[i].B, palette[i].G, palette[i].R);
+
+                        }
+                        break;
+                    default:
+                        throw new Exception(pic.PaletteFormat.ToString() + " for palette not implemented yet.");
                 }
+
+                // Create bitmap palette
                 if (image.PixelFormat == PixelFormat.Format4bppIndexed ||
                     image.PixelFormat == PixelFormat.Format8bppIndexed)
                 {
@@ -322,6 +323,35 @@ namespace Kh
                 }
             }
             else throw new InvalidDataException("Invalid magic code " + header.magicCode.ToString("X08"));
+        }
+
+        void InvertRedBlueChannels(byte[] data, PixelFormat format)
+        {
+            switch (format)
+            {
+                case PixelFormat.Format24bppRgb:
+                    for (int i = 0; i < pic.width * pic.height; i++)
+                    {
+                        byte tmp = data[i * 3 + 0];
+                        data[i * 3 + 0] = data[i * 3 + 2];
+                        data[i * 3 + 2] = tmp;
+                    }
+                    break;
+                case PixelFormat.Format32bppArgb:
+                    for (int i = 0; i < pic.width * pic.height; i++)
+                    {
+                        byte tmp = data[i * 4 + 0];
+                        data[i * 4 + 0] = data[i * 4 + 2];
+                        data[i * 4 + 2] = tmp;
+                    }
+                    break;
+                case PixelFormat.Format4bppIndexed:
+                    for (int i = 0; i < pic.width * pic.height / 2; i++)
+                    {
+                        data[i] = (byte)(((data[i] & 0x0F) << 4) | (data[i] >> 4));
+                    }
+                    break;
+            }
         }
 
         public Image Image
