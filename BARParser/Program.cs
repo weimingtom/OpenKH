@@ -8,7 +8,7 @@ namespace BARParser
     {
         static void Main(string[] args)
         {
-            Kh.IDX idx = new Kh.IDX(
+            Kh.IDX2 idx = new Kh.IDX2(
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IDX", FileMode.Open, FileAccess.Read),
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IMG", FileMode.Open, FileAccess.Read));
 

@@ -45,7 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs" />
-    <Compile Include="IDX.cs" />
+    <Compile Include="IDX1.cs" />
+    <Compile Include="IDX2.cs" />
     <Compile Include="Img.cs" />
     <Compile Include="Msg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
