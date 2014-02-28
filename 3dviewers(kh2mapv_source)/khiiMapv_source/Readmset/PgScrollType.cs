@@ -1,11 +1,9 @@
-﻿namespace Readmset
+using System;
+namespace Readmset
 {
-    using System;
-
-    public enum PgScrollType
-    {
-        Absolute,
-        ScreenSizeBased
-    }
+	public enum PgScrollType
+	{
+		Absolute,
+		ScreenSizeBased
+	}
 }
-

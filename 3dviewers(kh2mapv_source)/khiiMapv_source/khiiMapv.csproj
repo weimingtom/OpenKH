@@ -1,129 +1,126 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectType>local</ProjectType>
-    <ProjectVersion>7.10.377</ProjectVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1E3DB7B7-CECD-4C5A-BEDE-AB7B94FB16F4}</ProjectGuid>
+    <ProjectGuid>{4C11AC28-776B-44F7-BAE9-B2A89A893C67}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <AssemblyName>khiiMapv</AssemblyName>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
+    <AssemblyName>khiiMapv</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
     <Reference Include="SlimDX" />
     <Reference Include="LinqBridge" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Global.cs" />
-    <Compile Include="khiiMapv\Pax\R.cs" />
-    <Compile Include="khiiMapv\Pax\St3.cs" />
-    <Compile Include="khiiMapv\Pax\St3r.cs" />
-    <Compile Include="khiiMapv\Pax\STXYC.cs" />
-    <Compile Include="khiiMapv\PicPAX.cs" />
-    <Compile Include="khiiMapv\ParsePAX.cs" />
-    <Compile Include="ParseAI\Parse03.cs" />
-    <Compile Include="khiiMapv\Wavo.cs" />
-    <Compile Include="khiiMapv\ParseSD.cs" />
-    <Compile Include="khiiMapv\PicIMGD.cs" />
-    <Compile Include="khiiMapv\ParseIMGZ.cs" />
-    <Compile Include="khiiMapv\ParseIMGD.cs" />
-    <Compile Include="vcBinTex4\Reform32.cs" />
-    <Compile Include="vcBinTex4\Reform8.cs" />
-    <Compile Include="vcBinTex4\Reform4.cs" />
-    <Compile Include="khiiMapv\TFX.cs" />
-    <Compile Include="khiiMapv\TCC.cs" />
-    <Compile Include="khiiMapv\WM.cs" />
-    <Compile Include="khiiMapv\STim.cs" />
-    <Compile Include="khiiMapv\TexUt2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="hex04BinTrack\ParseVIF1.cs" />
+    <Compile Include="hex04BinTrack\UC.cs" />
+    <Compile Include="hex04BinTrack\VU1Mem.cs" />
+    <Compile Include="khiiMapv.CollTest\Co1.cs" />
+    <Compile Include="khiiMapv.CollTest\Co2.cs" />
+    <Compile Include="khiiMapv.CollTest\Co3.cs" />
+    <Compile Include="khiiMapv.CollTest\CollReader.cs" />
+    <Compile Include="khiiMapv.Parse02\StrCode.cs" />
+    <Compile Include="khiiMapv.Parse02\StrCodeCollection.cs" />
+    <Compile Include="khiiMapv.Parse02\StrDec.cs" />
+    <Compile Include="khiiMapv.Pax\R.cs" />
+    <Compile Include="khiiMapv.Pax\St3.cs" />
+    <Compile Include="khiiMapv.Pax\St3r.cs" />
+    <Compile Include="khiiMapv.Pax\STXYC.cs" />
+    <Compile Include="khiiMapv.Properties\Resources.cs" />
+    <Compile Include="khiiMapv.Properties\Settings.cs" />
+    <Compile Include="khiiMapv.Put\IPuteffect.cs" />
+    <Compile Include="khiiMapv.Put\Putbox.cs" />
+    <Compile Include="khiiMapv.Put\Putfragment.cs" />
+    <Compile Include="khiiMapv.Put\Putvi.cs" />
+    <Compile Include="khiiMapv\BEXForm.cs" />
+    <Compile Include="khiiMapv\CustomVertex.cs" />
     <Compile Include="khiiMapv\CUtil.cs" />
-    <Compile Include="khiiMapv\Properties\Resources.cs" />
-    <Compile Include="khiiMapv\ParseRADA.cs" />
-    <Compile Include="khiiMapv\Parse4Mdlx.cs" />
-    <Compile Include="khiiMapv\Properties\Settings.cs" />
-    <Compile Include="khkh_xldM\ReadBar.cs" />
-    <Compile Include="khiiMapv\Parse02\StrDec.cs" />
-    <Compile Include="khiiMapv\Parse02\StrCode.cs" />
-    <Compile Include="khiiMapv\Parse02\StrCodeCollection.cs" />
-    <Compile Include="khiiMapv\Visf.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="khiiMapv\Put\IPuteffect.cs" />
-    <Compile Include="khiiMapv\Put\Putfragment.cs" />
-    <Compile Include="khiiMapv\Put\Putvi.cs" />
-    <Compile Include="khiiMapv\Put\Putbox.cs" />
-    <Compile Include="Readmset\PgScrollType.cs" />
-    <Compile Include="Readmset\HexVwer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Readmset\RangeMarked.cs" />
-    <Compile Include="hex04BinTrack\UC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="khiiMapv\RDForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="khiiMapv\Vifpli.cs" />
+    <Compile Include="khiiMapv\DC.cs" />
     <Compile Include="khiiMapv\M4.cs" />
     <Compile Include="khiiMapv\MTex.cs" />
-    <Compile Include="khiiMapv\DC.cs" />
-    <Compile Include="khkh_xldMii\V\SimaVU1e.cs" />
-    <Compile Include="khkh_xldMii\V\Body1e.cs" />
-    <Compile Include="khkh_xldMii\V\MJ1.cs" />
-    <Compile Include="khkh_xldMii\V\ProtInvalidTypeException.cs" />
+    <Compile Include="khiiMapv\Parse4Mdlx.cs" />
+    <Compile Include="khiiMapv\ParseIMGD.cs" />
+    <Compile Include="khiiMapv\ParseIMGZ.cs" />
+    <Compile Include="khiiMapv\ParsePAX.cs" />
+    <Compile Include="khiiMapv\ParseRADA.cs" />
+    <Compile Include="khiiMapv\ParseSD.cs" />
+    <Compile Include="khiiMapv\PicIMGD.cs" />
+    <Compile Include="khiiMapv\PicPAX.cs" />
     <Compile Include="khiiMapv\Program.cs" />
-    <Compile Include="khiiMapv\CollTest\CollReader.cs" />
-    <Compile Include="khiiMapv\CollTest\Co3.cs" />
-    <Compile Include="khiiMapv\CollTest\Co2.cs" />
-    <Compile Include="khiiMapv\CollTest\Co1.cs" />
+    <Compile Include="khiiMapv\RDForm.cs" />
+    <Compile Include="khiiMapv\STim.cs" />
+    <Compile Include="khiiMapv\TCC.cs" />
+    <Compile Include="khiiMapv\TexUt2.cs" />
+    <Compile Include="khiiMapv\TFX.cs" />
+    <Compile Include="khiiMapv\Vifpli.cs" />
+    <Compile Include="khiiMapv\Visf.cs" />
+    <Compile Include="khiiMapv\Wavo.cs" />
+    <Compile Include="khiiMapv\WM.cs" />
+    <Compile Include="khkh_xldMii.Mc\AxBone.cs" />
+    <Compile Include="khkh_xldMii.Mx\Mdlxfst.cs" />
+    <Compile Include="khkh_xldMii.Mx\RUtil.cs" />
+    <Compile Include="khkh_xldMii.Mx\T11.cs" />
+    <Compile Include="khkh_xldMii.Mx\T12.cs" />
+    <Compile Include="khkh_xldMii.Mx\T13vif.cs" />
+    <Compile Include="khkh_xldMii.Mx\T21.cs" />
+    <Compile Include="khkh_xldMii.Mx\T31.cs" />
+    <Compile Include="khkh_xldMii.Mx\T32.cs" />
+    <Compile Include="khkh_xldMii.Mx\UtilAxBoneReader.cs" />
+    <Compile Include="khkh_xldMii.V\Body1e.cs" />
+    <Compile Include="khkh_xldMii.V\MJ1.cs" />
+    <Compile Include="khkh_xldMii.V\ProtInvalidTypeException.cs" />
+    <Compile Include="khkh_xldMii.V\SimaVU1e.cs" />
+    <Compile Include="khkh_xldM\ReadBar.cs" />
+    <Compile Include="ParseAI\Parse03.cs" />
+    <Compile Include="Readmset\HexVwer.cs" />
+    <Compile Include="Readmset\PgScrollType.cs" />
+    <Compile Include="Readmset\RangeMarked.cs" />
+    <Compile Include="vcBinTex4\Reform32.cs" />
+    <Compile Include="vcBinTex4\Reform4.cs" />
+    <Compile Include="vcBinTex4\Reform8.cs" />
     <Compile Include="vwBinTex2\KHcv4pal.cs" />
-    <Compile Include="vwBinTex2\KHcv8pal.cs" />
-    <Compile Include="vwBinTex2\KHcv8pal_v2.cs" />
     <Compile Include="vwBinTex2\KHcv4pal_v2.cs" />
+    <Compile Include="vwBinTex2\KHcv8pal.cs" />
     <Compile Include="vwBinTex2\KHcv8pal_swap34.cs" />
-    <Compile Include="hex04BinTrack\VU1Mem.cs" />
-    <Compile Include="hex04BinTrack\ParseVIF1.cs" />
-    <Compile Include="khiiMapv\CustomVertex.cs" />
-    <Compile Include="khkh_xldMii\Mc\AxBone.cs" />
-    <Compile Include="khkh_xldMii\Mx\T31.cs" />
-    <Compile Include="khkh_xldMii\Mx\T11.cs" />
-    <Compile Include="khkh_xldMii\Mx\T12.cs" />
-    <Compile Include="khkh_xldMii\Mx\T13vif.cs" />
-    <Compile Include="khkh_xldMii\Mx\T21.cs" />
-    <Compile Include="khkh_xldMii\Mx\T32.cs" />
-    <Compile Include="khkh_xldMii\Mx\RUtil.cs" />
-    <Compile Include="khkh_xldMii\Mx\UtilAxBoneReader.cs" />
-    <Compile Include="khkh_xldMii\Mx\Mdlxfst.cs" />
-    <Compile Include="khiiMapv\BEXForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <EmbeddedResource Include="hex04BinTrack.UC.resources" />
-    <EmbeddedResource Include="Readmset.HexVwer.resources" />
-    <EmbeddedResource Include="khiiMapv.BEXForm.resources" />
-    <EmbeddedResource Include="khiiMapv.Visf.resources" />
-    <EmbeddedResource Include="khiiMapv.Properties.Resources.resources" />
-    <EmbeddedResource Include="khiiMapv.RDForm.resources" />
+    <Compile Include="vwBinTex2\KHcv8pal_v2.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="hex04BinTrack\UC.resources" />
+    <EmbeddedResource Include="khiiMapv.Properties\Resources.resources" />
+    <EmbeddedResource Include="khiiMapv\BEXForm.resources" />
+    <EmbeddedResource Include="khiiMapv\RDForm.resources" />
+    <EmbeddedResource Include="khiiMapv\Visf.resources" />
+    <EmbeddedResource Include="Readmset\HexVwer.resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

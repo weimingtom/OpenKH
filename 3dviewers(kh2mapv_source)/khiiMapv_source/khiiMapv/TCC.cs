@@ -1,11 +1,9 @@
-﻿namespace khiiMapv
+using System;
+namespace khiiMapv
 {
-    using System;
-
-    internal enum TCC
-    {
-        RGB,
-        RGBA
-    }
+	internal enum TCC
+	{
+		RGB,
+		RGBA
+	}
 }
-

@@ -1,520 +1,329 @@
-﻿namespace khiiMapv
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+namespace khiiMapv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
+	public class ParseSD
+	{
+		private class Wavi
+		{
+			public int off;
+			public int gakki;
+			public int ontei;
+			public int sps;
+		}
+		private class BER
+		{
+			private BinaryReader br;
+			public BER(BinaryReader br)
+			{
+				this.br = br;
+			}
+			public int ReadInt32()
+			{
+				byte[] array = this.br.ReadBytes(4);
+				return (int)array[0] << 24 | (int)array[1] << 16 | (int)array[2] << 8 | (int)array[3];
+			}
+			public short ReadUInt16()
+			{
+				int num = (int)this.br.ReadByte() << 8;
+				return (short)(num | (int)this.br.ReadByte());
+			}
+		}
+		private class SPUConv
+		{
+			private static int[,] f = new int[,]
+			{
 
-    public class ParseSD
-    {
-        public ParseSD()
-        {
-            base..ctor();
-            return;
-        }
+				{
+					0,
+					0
+				},
 
-        public static unsafe Wavo[] ReadIV(Stream fs)
-        {
-            BinaryReader reader;
-            BER ber;
-            int num;
-            KeyValuePair<int, int>[] pairArray;
-            int num2;
-            int num3;
-            int num4;
-            List<Wavo> list;
-            int num5;
-            int num6;
-            int num7;
-            int num8;
-            reader = new BinaryReader(fs);
-            ber = new BER(reader);
-            fs.Position = 12L;
-            num = reader.ReadInt32();
-            pairArray = new KeyValuePair<int, int>[num];
-            fs.Position = 0x10L;
-            num2 = 0;
-            goto Label_006F;
-        Label_0033:
-            num3 = reader.ReadInt32();
-            if (num3 < 0)
-            {
-                goto Label_004B;
-            }
-            num3 += 0x10 + (8 * num);
-        Label_004B:
-            num4 = reader.ReadInt32();
-            *(&(pairArray[num2])) = new KeyValuePair<int, int>(num3, num4);
-            num2 += 1;
-        Label_006F:
-            if (num2 < num)
-            {
-                goto Label_0033;
-            }
-            list = new List<Wavo>();
-            num5 = 0;
-            goto Label_010A;
-        Label_0083:
-            num6 = &(pairArray[num5]).Key;
-            if (num6 < 0)
-            {
-                goto Label_0104;
-            }
-            fs.Position = (long) (num6 + 12);
-            num7 = ber.ReadInt32() - 0x20;
-            fs.Position = (long) (num6 + 0x10);
-            num8 = ber.ReadInt32();
-            fs.Position = (long) (num6 + 0x40);
-            list.Add(new Wavo(&num5.ToString("00") + ".wav", SPUConv.ToWave(new MemoryStream(reader.ReadBytes(num7)), num8)));
-        Label_0104:
-            num5 += 1;
-        Label_010A:
-            if (num5 < ((int) pairArray.Length))
-            {
-                goto Label_0083;
-            }
-            return list.ToArray();
-        }
+				{
+					60,
+					0
+				},
 
-        public static unsafe Wavo[] ReadWD(Stream fs)
-        {
-            BinaryReader reader;
-            int num;
-            int num2;
-            int[] numArray;
-            int num3;
-            int num4;
-            int num5;
-            List<Wavi> list;
-            int num6;
-            int num7;
-            int num8;
-            Wavi wavi;
-            List<Wavo> list2;
-            int num9;
-            Wavi wavi2;
-            int num10;
-            byte[] buffer;
-            int num11;
-            int num12;
-            int num13;
-            reader = new BinaryReader(fs);
-            fs.Position = 8L;
-            num = reader.ReadInt32();
-            num2 = reader.ReadInt32();
-            numArray = new int[num];
-            fs.Position = 0x20L;
-            num3 = 0;
-            goto Label_0042;
-        Label_0032:
-            numArray[num3] = reader.ReadInt32();
-            num3 += 1;
-        Label_0042:
-            if (num3 < num)
-            {
-                goto Label_0032;
-            }
-            num4 = 0;
-            num5 = 0;
-            list = new List<Wavi>();
-            num6 = 0;
-            goto Label_0104;
-        Label_005C:
-            num7 = (0x20 + (4 * ((num + 3) & -4))) + (0x20 * num6);
-            num8 = Array.IndexOf<int>(numArray, num7);
-            if (num8 < 0)
-            {
-                goto Label_0085;
-            }
-            num4 = num8;
-            num5 = 0;
-        Label_0085:
-            fs.Position = (long) (num7 + 0x10);
-            if (reader.ReadInt64() != 0L)
-            {
-                goto Label_00A5;
-            }
-            if (reader.ReadInt64() == 0L)
-            {
-                goto Label_00FE;
-            }
-        Label_00A5:
-            fs.Position = (long) (num7 + 4);
-            wavi = new Wavi();
-            wavi.off = reader.ReadInt32();
-            wavi.gakki = num4;
-            wavi.ontei = num5;
-            num5 += 1;
-            fs.Position = (long) (num7 + 0x16);
-            wavi.sps = reader.ReadUInt16();
-            list.Add(wavi);
-        Label_00FE:
-            num6 += 1;
-        Label_0104:
-            if (num6 < num2)
-            {
-                goto Label_005C;
-            }
-            list2 = new List<Wavo>();
-            num9 = 0;
-            goto Label_01FE;
-        Label_011B:
-            wavi2 = list[num9];
-            num10 = ((0x20 + (0x10 * ((num + 3) & -4))) + (0x20 * num2)) + wavi2.off;
-            fs.Position = (long) num10;
-            goto Label_0174;
-        Label_014C:
-            buffer = reader.ReadBytes(0x10);
-            num11 = 0;
-            goto Label_0161;
-        Label_015B:
-            num11 += 1;
-        Label_0161:
-            if (num11 >= 0x10)
-            {
-                goto Label_016E;
-            }
-            if (buffer[num11] == null)
-            {
-                goto Label_015B;
-            }
-        Label_016E:
-            if (num11 == 0x10)
-            {
-                goto Label_0182;
-            }
-        Label_0174:
-            if (fs.Position < fs.Length)
-            {
-                goto Label_014C;
-            }
-        Label_0182:
-            num12 = wavi2.sps;
-            num13 = (Convert.ToInt32(fs.Position) - num10) - 0x20;
-            fs.Position = (long) num10;
-            list2.Add(new Wavo(&wavi2.gakki.ToString("000") + "." + &wavi2.ontei.ToString("00") + ".wav", SPUConv.ToWave(new MemoryStream(reader.ReadBytes(num13)), num12)));
-            num9 += 1;
-        Label_01FE:
-            if (num9 < list.Count)
-            {
-                goto Label_011B;
-            }
-            return list2.ToArray();
-        }
+				{
+					115,
+					-52
+				},
 
-        private class BER
-        {
-            private BinaryReader br;
+				{
+					98,
+					-55
+				},
 
-            public BER(BinaryReader br)
-            {
-                base..ctor();
-                this.br = br;
-                return;
-            }
-
-            public int ReadInt32()
-            {
-                byte[] buffer;
-                buffer = this.br.ReadBytes(4);
-                return ((((buffer[0] << 0x18) | (buffer[1] << 0x10)) | (buffer[2] << 8)) | buffer[3]);
-            }
-
-            public short ReadUInt16()
-            {
-                int num;
-                num = this.br.ReadByte() << 8;
-                return (short) (num | this.br.ReadByte());
-            }
-        }
-
-        private class SPUConv
-        {
-            private static int[,] f;
-
-            static SPUConv()
-            {
-                f = new int[,] { { 0, 0 }, { 60, 0 }, { 0x73, -52 }, { 0x62, -55 }, { 0x7a, -60 } };
-                return;
-            }
-
-            public SPUConv()
-            {
-                base..ctor();
-                return;
-            }
-
-            public static byte[] ToWave(MemoryStream fs, int nSamplesPerSec)
-            {
-                int num;
-                int num2;
-                List<int> list;
-                byte[] buffer;
-                int num3;
-                int num4;
-                int num5;
-                int num6;
-                int num7;
-                int num8;
-                MemoryStream stream;
-                int num9;
-                BinaryWriter writer;
-                int num10;
-                int num11;
-                num = 0;
-                num2 = 0;
-                list = new List<int>();
-                goto Label_011B;
-            Label_000F:
-                buffer = new byte[0x10];
-                Trace.Assert(0x10 == fs.Read(buffer, 0, 0x10));
-                num3 = buffer[0];
-                num4 = num3 & 15;
-                num3 = num3 >> 4;
-                byte num1 = buffer[1];
-                num5 = 0;
-                goto Label_0112;
-            Label_0048:
-                num6 = buffer[2 + num5];
-                num7 = (num6 & 15) << 12;
-                if ((num7 & 0x8000) == null)
-                {
-                    goto Label_006E;
-                }
-                num7 |= -65536;
-            Label_006E:
-                num8 = num7 >> (num4 & 0x1f);
-                num8 = (num8 + ((num * f[num3, 0]) >> 6)) + ((num2 * f[num3, 1]) >> 6);
-                num2 = num;
-                num = num8;
-                num7 = (num6 & 240) << 8;
-                list.Add(num8);
-                if ((num7 & 0x8000) == null)
-                {
-                    goto Label_00CD;
-                }
-                num7 |= -65536;
-            Label_00CD:
-                num8 = num7 >> (num4 & 0x1f);
-                num8 = (num8 + ((num * f[num3, 0]) >> 6)) + ((num2 * f[num3, 1]) >> 6);
-                num2 = num;
-                num = num8;
-                list.Add(num8);
-                num5 += 1;
-            Label_0112:
-                if (num5 < 14)
-                {
-                    goto Label_0048;
-                }
-            Label_011B:
-                if ((fs.Position + 0x10L) <= fs.Length)
-                {
-                    goto Label_000F;
-                }
-                stream = new MemoryStream();
-                num9 = list.Count;
-                writer = new BinaryWriter(stream);
-                writer.Write(Encoding.ASCII.GetBytes("RIFF"));
-                writer.Write(50 + (2 * num9));
-                writer.Write(Encoding.ASCII.GetBytes("WAVE"));
-                writer.Write(Encoding.ASCII.GetBytes("fmt "));
-                writer.Write(0x12);
-                writer.Write(1);
-                writer.Write(1);
-                writer.Write(nSamplesPerSec);
-                writer.Write(nSamplesPerSec * 2);
-                writer.Write(2);
-                writer.Write(0x10);
-                writer.Write(0);
-                writer.Write(Encoding.ASCII.GetBytes("fact"));
-                writer.Write(4);
-                writer.Write(num9);
-                writer.Write(Encoding.ASCII.GetBytes("data"));
-                writer.Write(2 * num9);
-                num10 = 0;
-                goto Label_0257;
-            Label_0229:
-                num11 = Math.Max(-32768, Math.Min(0x7fff, list[num10]));
-                writer.Write((ushort) num11);
-                num10 += 1;
-            Label_0257:
-                if (num10 < num9)
-                {
-                    goto Label_0229;
-                }
-                return stream.ToArray();
-            }
-
-            public static byte[] ToWave2ch(MemoryStream fs, int nSamplesPerSec)
-            {
-                int num;
-                int num2;
-                int num3;
-                int num4;
-                List<int> list;
-                List<int> list2;
-                byte[] buffer;
-                int num5;
-                int num6;
-                int num7;
-                int num8;
-                int num9;
-                int num10;
-                int num11;
-                int num12;
-                int num13;
-                int num14;
-                int num15;
-                int num16;
-                MemoryStream stream;
-                int num17;
-                BinaryWriter writer;
-                int num18;
-                int num19;
-                int num20;
-                num = 0;
-                num2 = 0;
-                num3 = 0;
-                num4 = 0;
-                list = new List<int>();
-                list2 = new List<int>();
-                goto Label_0238;
-            Label_001B:
-                buffer = new byte[0x10];
-                Trace.Assert(0x10 == fs.Read(buffer, 0, 0x10));
-                num5 = buffer[0];
-                num6 = num5 & 15;
-                num5 = num5 >> 4;
-                byte num1 = buffer[1];
-                num7 = 0;
-                goto Label_0125;
-            Label_0058:
-                num8 = buffer[2 + num7];
-                num9 = (num8 & 15) << 12;
-                if ((num9 & 0x8000) == null)
-                {
-                    goto Label_007F;
-                }
-                num9 |= -65536;
-            Label_007F:
-                num10 = num9 >> (num6 & 0x1f);
-                num10 = (num10 + ((num * f[num5, 0]) >> 6)) + ((num2 * f[num5, 1]) >> 6);
-                num2 = num;
-                num = num10;
-                num9 = (num8 & 240) << 8;
-                list.Add(num10);
-                if ((num9 & 0x8000) == null)
-                {
-                    goto Label_00DF;
-                }
-                num9 |= -65536;
-            Label_00DF:
-                num10 = num9 >> (num6 & 0x1f);
-                num10 = (num10 + ((num * f[num5, 0]) >> 6)) + ((num2 * f[num5, 1]) >> 6);
-                num2 = num;
-                num = num10;
-                list.Add(num10);
-                num7 += 1;
-            Label_0125:
-                if (num7 < 14)
-                {
-                    goto Label_0058;
-                }
-                Trace.Assert(0x10 == fs.Read(buffer, 0, 0x10));
-                num11 = buffer[0];
-                num12 = num11 & 15;
-                num11 = num11 >> 4;
-                byte num21 = buffer[1];
-                num13 = 0;
-                goto Label_022F;
-            Label_0162:
-                num14 = buffer[2 + num13];
-                num15 = (num14 & 15) << 12;
-                if ((num15 & 0x8000) == null)
-                {
-                    goto Label_0189;
-                }
-                num15 |= -65536;
-            Label_0189:
-                num16 = num15 >> (num12 & 0x1f);
-                num16 = (num16 + ((num3 * f[num11, 0]) >> 6)) + ((num4 * f[num11, 1]) >> 6);
-                num4 = num3;
-                num3 = num16;
-                num15 = (num14 & 240) << 8;
-                list2.Add(num16);
-                if ((num15 & 0x8000) == null)
-                {
-                    goto Label_01E9;
-                }
-                num15 |= -65536;
-            Label_01E9:
-                num16 = num15 >> (num12 & 0x1f);
-                num16 = (num16 + ((num3 * f[num11, 0]) >> 6)) + ((num4 * f[num11, 1]) >> 6);
-                num4 = num3;
-                num3 = num16;
-                list2.Add(num16);
-                num13 += 1;
-            Label_022F:
-                if (num13 < 14)
-                {
-                    goto Label_0162;
-                }
-            Label_0238:
-                if ((fs.Position + 0x20L) <= fs.Length)
-                {
-                    goto Label_001B;
-                }
-                stream = new MemoryStream();
-                num17 = list.Count;
-                writer = new BinaryWriter(stream);
-                writer.Write(Encoding.ASCII.GetBytes("RIFF"));
-                writer.Write(50 + (4 * num17));
-                writer.Write(Encoding.ASCII.GetBytes("WAVE"));
-                writer.Write(Encoding.ASCII.GetBytes("fmt "));
-                writer.Write(0x12);
-                writer.Write(1);
-                writer.Write(2);
-                writer.Write(nSamplesPerSec);
-                writer.Write(nSamplesPerSec * 4);
-                writer.Write(4);
-                writer.Write(0x10);
-                writer.Write(0);
-                writer.Write(Encoding.ASCII.GetBytes("fact"));
-                writer.Write(4);
-                writer.Write(num17);
-                writer.Write(Encoding.ASCII.GetBytes("data"));
-                writer.Write(4 * num17);
-                num18 = 0;
-                goto Label_039F;
-            Label_0347:
-                num19 = Math.Max(-32768, Math.Min(0x7fff, list[num18]));
-                writer.Write((ushort) num19);
-                num20 = Math.Max(-32768, Math.Min(0x7fff, list2[num18]));
-                writer.Write((ushort) num20);
-                num18 += 1;
-            Label_039F:
-                if (num18 < num17)
-                {
-                    goto Label_0347;
-                }
-                return stream.ToArray();
-            }
-        }
-
-        private class Wavi
-        {
-            public int gakki;
-            public int off;
-            public int ontei;
-            public int sps;
-
-            public Wavi()
-            {
-                base..ctor();
-                return;
-            }
-        }
-    }
+				{
+					122,
+					-60
+				}
+			};
+			public static byte[] ToWave(MemoryStream fs, int nSamplesPerSec)
+			{
+				int num = 0;
+				int num2 = 0;
+				List<int> list = new List<int>();
+				while (fs.Position + 16L <= fs.Length)
+				{
+					byte[] array = new byte[16];
+					Trace.Assert(16 == fs.Read(array, 0, 16));
+					int num3 = (int)array[0];
+					int num4 = num3 & 15;
+					num3 >>= 4;
+					byte arg_3F_0 = array[1];
+					for (int i = 0; i < 14; i++)
+					{
+						int num5 = (int)array[2 + i];
+						int num6 = (num5 & 15) << 12;
+						if ((num6 & 32768) != 0)
+						{
+							num6 |= -65536;
+						}
+						int num7 = num6 >> num4;
+						num7 = num7 + (num * ParseSD.SPUConv.f[num3, 0] >> 6) + (num2 * ParseSD.SPUConv.f[num3, 1] >> 6);
+						num2 = num;
+						num = num7;
+						num6 = (num5 & 240) << 8;
+						list.Add(num7);
+						if ((num6 & 32768) != 0)
+						{
+							num6 |= -65536;
+						}
+						num7 = num6 >> num4;
+						num7 = num7 + (num * ParseSD.SPUConv.f[num3, 0] >> 6) + (num2 * ParseSD.SPUConv.f[num3, 1] >> 6);
+						num2 = num;
+						num = num7;
+						list.Add(num7);
+					}
+				}
+				MemoryStream memoryStream = new MemoryStream();
+				int count = list.Count;
+				BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("RIFF"));
+				binaryWriter.Write(50 + 2 * count);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("WAVE"));
+				binaryWriter.Write(Encoding.ASCII.GetBytes("fmt "));
+				binaryWriter.Write(18);
+				binaryWriter.Write(1);
+				binaryWriter.Write(1);
+				binaryWriter.Write(nSamplesPerSec);
+				binaryWriter.Write(nSamplesPerSec * 2);
+				binaryWriter.Write(2);
+				binaryWriter.Write(16);
+				binaryWriter.Write(0);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("fact"));
+				binaryWriter.Write(4);
+				binaryWriter.Write(count);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("data"));
+				binaryWriter.Write(2 * count);
+				for (int j = 0; j < count; j++)
+				{
+					int num8 = Math.Max(-32768, Math.Min(32767, list[j]));
+					binaryWriter.Write((ushort)num8);
+				}
+				return memoryStream.ToArray();
+			}
+			public static byte[] ToWave2ch(MemoryStream fs, int nSamplesPerSec)
+			{
+				int num = 0;
+				int num2 = 0;
+				int num3 = 0;
+				int num4 = 0;
+				List<int> list = new List<int>();
+				List<int> list2 = new List<int>();
+				while (fs.Position + 32L <= fs.Length)
+				{
+					byte[] array = new byte[16];
+					Trace.Assert(16 == fs.Read(array, 0, 16));
+					int num5 = (int)array[0];
+					int num6 = num5 & 15;
+					num5 >>= 4;
+					byte arg_4F_0 = array[1];
+					for (int i = 0; i < 14; i++)
+					{
+						int num7 = (int)array[2 + i];
+						int num8 = (num7 & 15) << 12;
+						if ((num8 & 32768) != 0)
+						{
+							num8 |= -65536;
+						}
+						int num9 = num8 >> num6;
+						num9 = num9 + (num * ParseSD.SPUConv.f[num5, 0] >> 6) + (num2 * ParseSD.SPUConv.f[num5, 1] >> 6);
+						num2 = num;
+						num = num9;
+						num8 = (num7 & 240) << 8;
+						list.Add(num9);
+						if ((num8 & 32768) != 0)
+						{
+							num8 |= -65536;
+						}
+						num9 = num8 >> num6;
+						num9 = num9 + (num * ParseSD.SPUConv.f[num5, 0] >> 6) + (num2 * ParseSD.SPUConv.f[num5, 1] >> 6);
+						num2 = num;
+						num = num9;
+						list.Add(num9);
+					}
+					Trace.Assert(16 == fs.Read(array, 0, 16));
+					int num10 = (int)array[0];
+					int num11 = num10 & 15;
+					num10 >>= 4;
+					byte arg_159_0 = array[1];
+					for (int j = 0; j < 14; j++)
+					{
+						int num12 = (int)array[2 + j];
+						int num13 = (num12 & 15) << 12;
+						if ((num13 & 32768) != 0)
+						{
+							num13 |= -65536;
+						}
+						int num14 = num13 >> num11;
+						num14 = num14 + (num3 * ParseSD.SPUConv.f[num10, 0] >> 6) + (num4 * ParseSD.SPUConv.f[num10, 1] >> 6);
+						num4 = num3;
+						num3 = num14;
+						num13 = (num12 & 240) << 8;
+						list2.Add(num14);
+						if ((num13 & 32768) != 0)
+						{
+							num13 |= -65536;
+						}
+						num14 = num13 >> num11;
+						num14 = num14 + (num3 * ParseSD.SPUConv.f[num10, 0] >> 6) + (num4 * ParseSD.SPUConv.f[num10, 1] >> 6);
+						num4 = num3;
+						num3 = num14;
+						list2.Add(num14);
+					}
+				}
+				MemoryStream memoryStream = new MemoryStream();
+				int count = list.Count;
+				BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("RIFF"));
+				binaryWriter.Write(50 + 4 * count);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("WAVE"));
+				binaryWriter.Write(Encoding.ASCII.GetBytes("fmt "));
+				binaryWriter.Write(18);
+				binaryWriter.Write(1);
+				binaryWriter.Write(2);
+				binaryWriter.Write(nSamplesPerSec);
+				binaryWriter.Write(nSamplesPerSec * 4);
+				binaryWriter.Write(4);
+				binaryWriter.Write(16);
+				binaryWriter.Write(0);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("fact"));
+				binaryWriter.Write(4);
+				binaryWriter.Write(count);
+				binaryWriter.Write(Encoding.ASCII.GetBytes("data"));
+				binaryWriter.Write(4 * count);
+				for (int k = 0; k < count; k++)
+				{
+					int num15 = Math.Max(-32768, Math.Min(32767, list[k]));
+					binaryWriter.Write((ushort)num15);
+					int num16 = Math.Max(-32768, Math.Min(32767, list2[k]));
+					binaryWriter.Write((ushort)num16);
+				}
+				return memoryStream.ToArray();
+			}
+		}
+		public static Wavo[] ReadIV(Stream fs)
+		{
+			BinaryReader binaryReader = new BinaryReader(fs);
+			ParseSD.BER bER = new ParseSD.BER(binaryReader);
+			fs.Position = 12L;
+			int num = binaryReader.ReadInt32();
+			KeyValuePair<int, int>[] array = new KeyValuePair<int, int>[num];
+			fs.Position = 16L;
+			for (int i = 0; i < num; i++)
+			{
+				int num2 = binaryReader.ReadInt32();
+				if (num2 >= 0)
+				{
+					num2 += 16 + 8 * num;
+				}
+				int value = binaryReader.ReadInt32();
+				array[i] = new KeyValuePair<int, int>(num2, value);
+			}
+			List<Wavo> list = new List<Wavo>();
+			for (int j = 0; j < array.Length; j++)
+			{
+				int key = array[j].Key;
+				if (key >= 0)
+				{
+					fs.Position = (long)(key + 12);
+					int count = bER.ReadInt32() - 32;
+					fs.Position = (long)(key + 16);
+					int nSamplesPerSec = bER.ReadInt32();
+					fs.Position = (long)(key + 64);
+					list.Add(new Wavo(j.ToString("00") + ".wav", ParseSD.SPUConv.ToWave(new MemoryStream(binaryReader.ReadBytes(count)), nSamplesPerSec)));
+				}
+			}
+			return list.ToArray();
+		}
+		public static Wavo[] ReadWD(Stream fs)
+		{
+			BinaryReader binaryReader = new BinaryReader(fs);
+			fs.Position = 8L;
+			int num = binaryReader.ReadInt32();
+			int num2 = binaryReader.ReadInt32();
+			int[] array = new int[num];
+			fs.Position = 32L;
+			for (int i = 0; i < num; i++)
+			{
+				array[i] = binaryReader.ReadInt32();
+			}
+			int gakki = 0;
+			int num3 = 0;
+			List<ParseSD.Wavi> list = new List<ParseSD.Wavi>();
+			for (int j = 0; j < num2; j++)
+			{
+				int num4 = 32 + 4 * (num + 3 & -4) + 32 * j;
+				int num5 = Array.IndexOf<int>(array, num4);
+				if (num5 >= 0)
+				{
+					gakki = num5;
+					num3 = 0;
+				}
+				fs.Position = (long)(num4 + 16);
+				if (binaryReader.ReadInt64() != 0L || binaryReader.ReadInt64() != 0L)
+				{
+					fs.Position = (long)(num4 + 4);
+					ParseSD.Wavi wavi = new ParseSD.Wavi();
+					wavi.off = binaryReader.ReadInt32();
+					wavi.gakki = gakki;
+					wavi.ontei = num3;
+					num3++;
+					fs.Position = (long)(num4 + 22);
+					wavi.sps = (int)binaryReader.ReadUInt16();
+					list.Add(wavi);
+				}
+			}
+			List<Wavo> list2 = new List<Wavo>();
+			for (int k = 0; k < list.Count; k++)
+			{
+				ParseSD.Wavi wavi2 = list[k];
+				int num6 = 32 + 16 * (num + 3 & -4) + 32 * num2 + wavi2.off;
+				fs.Position = (long)num6;
+				while (fs.Position < fs.Length)
+				{
+					byte[] array2 = binaryReader.ReadBytes(16);
+					int num7 = 0;
+					while (num7 < 16 && array2[num7] == 0)
+					{
+						num7++;
+					}
+					if (num7 == 16)
+					{
+						break;
+					}
+				}
+				int sps = wavi2.sps;
+				int count = Convert.ToInt32(fs.Position) - num6 - 32;
+				fs.Position = (long)num6;
+				list2.Add(new Wavo(wavi2.gakki.ToString("000") + "." + wavi2.ontei.ToString("00") + ".wav", ParseSD.SPUConv.ToWave(new MemoryStream(binaryReader.ReadBytes(count)), sps)));
+			}
+			return list2.ToArray();
+		}
+	}
 }
-

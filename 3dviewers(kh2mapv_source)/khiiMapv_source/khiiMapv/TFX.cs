@@ -1,13 +1,11 @@
-﻿namespace khiiMapv
+using System;
+namespace khiiMapv
 {
-    using System;
-
-    internal enum TFX
-    {
-        Modulate,
-        Decal,
-        HL,
-        HL2
-    }
+	internal enum TFX
+	{
+		Modulate,
+		Decal,
+		HL,
+		HL2
+	}
 }
-

@@ -1,18 +1,13 @@
-﻿namespace khiiMapv
+using System;
+using System.Drawing;
+namespace khiiMapv
 {
-    using System;
-    using System.Drawing;
-
-    public class PicIMGD
-    {
-        public Bitmap pic;
-
-        public PicIMGD(Bitmap p)
-        {
-            base..ctor();
-            this.pic = p;
-            return;
-        }
-    }
+	public class PicIMGD
+	{
+		public Bitmap pic;
+		public PicIMGD(Bitmap p)
+		{
+			this.pic = p;
+		}
+	}
 }
-

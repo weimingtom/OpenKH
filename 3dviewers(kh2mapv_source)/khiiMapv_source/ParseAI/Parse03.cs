@@ -1,590 +1,443 @@
-﻿namespace ParseAI
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
 
+namespace ParseAI
+{
     public class Parse03
     {
-        private BinaryReader br;
-        private SortedDictionary<int, Dis> dict;
-        private SortedDictionary<int, string> labels;
-        private MemoryStream si;
-        private TextWriter wri;
+        MemoryStream si;
+        BinaryReader br;
+        TextWriter wri;
 
         public Parse03(TextWriter wri)
         {
-            this.dict = new SortedDictionary<int, Dis>();
-            this.labels = new SortedDictionary<int, string>();
-            base..ctor();
             this.wri = wri;
-            return;
-        }
-
-        private unsafe void Gen()
-        {
-            int num;
-            int num2;
-            string str;
-            Dis dis;
-            int num3;
-            Func<int, bool> func;
-            <>c__DisplayClass2 class2;
-            num = this.dict.Keys.Max<int>();
-            num2 = 0;
-            goto Label_0115;
-        Label_0018:
-            if (this.labels.TryGetValue(num2, &str) == null)
-            {
-                goto Label_0039;
-            }
-            this.wri.WriteLine("{0}:", str);
-        Label_0039:
-            if (this.dict.TryGetValue(num2, &dis) == null)
-            {
-                goto Label_0111;
-            }
-            this.wri.WriteLine(" {0,-40}; {1,4} {2:x}", dis.Desc, (int) num2, (int) (0x10 + (2 * num2)));
-            if (num2 >= num)
-            {
-                goto Label_0111;
-            }
-            func = null;
-            class2 = new <>c__DisplayClass2();
-            class2.x1 = num2 + (dis.Len / 2);
-            if (this.dict.ContainsKey(class2.x1) != null)
-            {
-                goto Label_0111;
-            }
-            if (func != null)
-            {
-                goto Label_00C7;
-            }
-            func = new Func<int, bool>(class2.<Gen>b__0);
-        Label_00C7:
-            num3 = this.dict.Keys.First<int>(func);
-            if ((num3 - class2.x1) <= 1)
-            {
-                goto Label_0111;
-            }
-            this.wri.WriteLine(" ; Unscanned {2} words. {0} to {1}", (int) class2.x1, (int) (num3 - 1), (int) (num3 - class2.x1));
-        Label_0111:
-            num2 += 1;
-        Label_0115:
-            if (num2 <= num)
-            {
-                goto Label_0018;
-            }
-            return;
-        }
-
-        private unsafe string GenLabel(int newoff)
-        {
-            string str;
-            if (this.labels.TryGetValue(newoff, &str) != null)
-            {
-                goto Label_002E;
-            }
-            str = string.Format("L{0:x4}", (int) newoff);
-            this.labels[newoff] = str;
-        Label_002E:
-            return str;
         }
 
         public void Run(byte[] bin)
         {
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            this.si = new MemoryStream(bin, 0);
-            this.br = new BinaryReader(this.si);
-            this.si.Position = 0L;
-            this.wri.WriteLine("#{0}", Ut.Read0Str(this.br));
-            this.wri.WriteLine("#Parseai 20100831");
-            this.si.Position = 0x10L;
-            num = this.br.ReadInt32();
-            num2 = this.br.ReadInt32();
-            num3 = this.br.ReadInt32();
-            this.wri.WriteLine("#{0:x} {1:x} {2:x}", (int) num, (int) num2, (int) num3);
-            num4 = 0;
-        Label_00AC:
-            this.si.Position = (long) (0x1c + (8 * num4));
-            num5 = this.br.ReadInt32();
-            num6 = this.br.ReadInt32();
-            if (num5 != null)
+            si = new MemoryStream(bin, false);
+            br = new BinaryReader(si);
+
             {
-                goto Label_00E0;
+                if (si.Length < 1) return;
+
+                si.Position = 0;
+                wri.WriteLine("#Parseai 20130512");
+                wri.WriteLine("#Header: {0}", Ut.Read0Str(br));
+
+                if (si.Length < 16 + 12) return;
+
+                si.Position = 16;
+                int v0 = br.ReadInt32();
+                int v4 = br.ReadInt32();
+                int v8 = br.ReadInt32();
+                wri.WriteLine("#Prefix: {0:x} {1:x} {2:x}", v0, v4, v8);
             }
-            if (num6 == null)
+
+            for (int x = 0; ; x++)
             {
-                goto Label_00F0;
+                si.Position = 0x1c + 8 * x;
+                int key = br.ReadInt32();
+                int off = br.ReadInt32();
+                if (key == 0 && off == 0) break;
+                wri.WriteLine("#Trigger: K{0} {1}", key, off);
             }
-        Label_00E0:
-            this.Walk(num5, num6);
-            num4 += 1;
-            goto Label_00AC;
-        Label_00F0:
-            this.Gen();
-            return;
+
+            wri.WriteLine("#Format: label: ai-code ; ai-decimal-off real-hex-off ");
+
+            for (int x = 0; ; x++)
+            {
+                si.Position = 0x1c + 8 * x;
+                int key = br.ReadInt32();
+                int off = br.ReadInt32();
+                if (key == 0 && off == 0) break;
+                Walk(key, off);
+            }
+
+            Gen();
         }
 
-        private void Walk(int key, int off)
+        private void Gen()
         {
-            Queue<int> queue;
-            CmdObs obs;
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            int num7;
-            int num8;
-            int num9;
-            int num10;
-            int num11;
-            int num12;
-            int num13;
-            int num14;
-            int num15;
-            int num16;
-            int num17;
-            int num18;
-            int num19;
-            int num20;
-            int num21;
-            int num22;
-            int num23;
-            int num24;
-            int num25;
-            int num26;
-            int num27;
-            int num28;
-            int num29;
-            bool flag;
-            int num30;
-            int num31;
-            int num32;
-            int num33;
-            object[] objArray;
-            object[] objArray2;
-            queue = new Queue<int>();
-            queue.Enqueue(off);
-            this.labels[off] = "K" + ((int) key);
-            obs = new CmdObs();
-            goto Label_0875;
-        Label_0034:
-            num = queue.Dequeue();
-        Label_003B:
-            off = num;
-            if (this.dict.ContainsKey(off) != null)
+            int cx = dict.Keys.Max();
+            int entire = cx;
+            if (labels.Count != 0) entire = Math.Max(entire, labels.Keys.Max());
+            if (errors.Count != 0) entire = Math.Max(entire, errors.Keys.Max());
+            for (int x = 0; x <= entire; x++)
             {
-                goto Label_0875;
-            }
-            this.si.Position = (long) (0x10 + (off * 2));
-            if (this.si.Position >= this.si.Length)
-            {
-                goto Label_0875;
-            }
-            num2 = this.br.ReadUInt16();
-            num3 = num2 & 15;
-            num4 = num2 & 0xff;
-            obs.Eat(num2);
-            if (num2 != 0xffff)
-            {
-                goto Label_00CD;
-            }
-            this.dict[off] = new Dis(2, string.Format("TERM", new object[0]));
-            goto Label_0875;
-        Label_00CD:
-            if (num4 != 0x30)
-            {
-                goto Label_0128;
-            }
-            num5 = this.br.ReadByte();
-            num6 = this.br.ReadByte();
-            this.dict[off] = new Dis(4, string.Format("Cmd30 {0:x2} {1:x2} {2:x2} ", (int) (num2 >> 8), (int) num5, (int) num6));
-            num = off + 2;
-            goto Label_003B;
-        Label_0128:
-            if (num4 != 0x60)
-            {
-                goto Label_0183;
-            }
-            num7 = this.br.ReadByte();
-            num8 = this.br.ReadByte();
-            this.dict[off] = new Dis(4, string.Format("Cmd60 {0:x2} {1:x2} {2:x2} ", (int) (num2 >> 8), (int) num7, (int) num8));
-            num = off + 2;
-            goto Label_003B;
-        Label_0183:
-            if (num4 != 160)
-            {
-                goto Label_01E1;
-            }
-            num9 = this.br.ReadByte();
-            num10 = this.br.ReadByte();
-            this.dict[off] = new Dis(4, string.Format("Cmda0 {0:x2} {1:x2} {2:x2} ", (int) (num2 >> 8), (int) num9, (int) num10));
-            num = off + 2;
-            goto Label_003B;
-        Label_01E1:
-            if (num4 != 0xc0)
-            {
-                goto Label_0275;
-            }
-            num11 = this.br.ReadInt32();
-            if (obs.Curt != 1)
-            {
-                goto Label_0241;
-            }
-            if (num11 == null)
-            {
-                goto Label_0241;
-            }
-            num12 = num11;
-            queue.Enqueue(num12);
-            this.dict[off] = new Dis(6, string.Format("Cmdc0l {0:x2} {1} ", (int) (num2 >> 8), this.GenLabel(num12)));
-            goto Label_026C;
-        Label_0241:
-            this.dict[off] = new Dis(6, string.Format("Cmdc0i {0:x2} {1:x8} ", (int) (num2 >> 8), (int) num11));
-        Label_026C:
-            num = off + 3;
-            goto Label_003B;
-        Label_0275:
-            if (num4 != 0xe0)
-            {
-                goto Label_02D6;
-            }
-            num13 = this.br.ReadUInt16();
-            this.si.Position = (long) (0x10 + (num13 * 2));
-            this.dict[off] = new Dis(4, string.Format("Print {0:x2} '{1}' ", (int) (num2 >> 8), Ut.Read0Str(this.br)));
-            num = off + 2;
-            goto Label_003B;
-        Label_02D6:
-            if (num4 != 11)
-            {
-                goto Label_0335;
-            }
-            num14 = this.br.ReadInt32();
-            num15 = (off + 3) + num14;
-            this.dict[off] = new Dis(6, string.Format("Call {0:x3} {1} ; {2} ", (int) (num2 >> 4), this.GenLabel(num15), (int) num14));
-            queue.Enqueue(num15);
-            num = off + 3;
-            goto Label_003B;
-        Label_0335:
-            if (num4 != 0x89)
-            {
-                goto Label_0367;
-            }
-            this.dict[off] = new Dis(2, string.Format("Ret {0:x2}", (int) (num2 >> 8)));
-            goto Label_0875;
-        Label_0367:
-            if (num3 != null)
-            {
-                goto Label_0409;
-            }
-            num16 = this.br.ReadByte();
-            num17 = this.br.ReadByte();
-            num18 = this.br.ReadByte();
-            num19 = this.br.ReadByte();
-            this.dict[off] = new Dis(6, string.Format("Cmd0 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", new object[] { (int) (num2 >> 4), (int) num16, (int) num17, (int) num18, (int) num19 }));
-            num = off + 3;
-            goto Label_003B;
-        Label_0409:
-            if (num3 != 1)
-            {
-                goto Label_0463;
-            }
-            num20 = this.br.ReadByte();
-            num21 = this.br.ReadByte();
-            this.dict[off] = new Dis(4, string.Format("Cmd1 {0:x3} {1:x2} {2:x2} ", (int) (num2 >> 4), (int) num20, (int) num21));
-            num = off + 2;
-            goto Label_003B;
-        Label_0463:
-            if (num3 != 2)
-            {
-                goto Label_0506;
-            }
-            num22 = this.br.ReadByte();
-            num23 = this.br.ReadByte();
-            num24 = this.br.ReadByte();
-            num25 = this.br.ReadByte();
-            this.dict[off] = new Dis(6, string.Format("Cmd2 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", new object[] { (int) (num2 >> 4), (int) num22, (int) num23, (int) num24, (int) num25 }));
-            num = off + 3;
-            goto Label_003B;
-        Label_0506:
-            if (num3 != 3)
-            {
-                goto Label_0560;
-            }
-            num26 = this.br.ReadByte();
-            num27 = this.br.ReadByte();
-            this.dict[off] = new Dis(4, string.Format("Cmd3 {0:x3} {1:x2} {2:x2} ", (int) (num2 >> 4), (int) num26, (int) num27));
-            num = off + 2;
-            goto Label_003B;
-        Label_0560:
-            if (num3 != 4)
-            {
-                goto Label_0592;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmd4 {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_0592:
-            if (num3 != 5)
-            {
-                goto Label_05C4;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmd5 {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_05C4:
-            if (num3 != 6)
-            {
-                goto Label_05F6;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmd6 {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_05F6:
-            if (num3 != 7)
-            {
-                goto Label_065C;
-            }
-            num28 = this.br.ReadInt16();
-            num29 = (off + 2) + num28;
-            this.dict[off] = new Dis(4, string.Format("J7 {0:x3} {1} ", (int) (num2 >> 4), this.GenLabel(num29)));
-            queue.Enqueue(num29);
-            if (((num2 >> 4) == 0) != null)
-            {
-                goto Label_0875;
-            }
-            num = off + 2;
-            goto Label_003B;
-        Label_065C:
-            if (num3 != 8)
-            {
-                goto Label_06B3;
-            }
-            num30 = this.br.ReadInt16();
-            num31 = (off + 2) + num30;
-            this.dict[off] = new Dis(4, string.Format("J8 {0:x3} {1} ", (int) (num2 >> 4), this.GenLabel(num31)));
-            queue.Enqueue(num31);
-            num = off + 2;
-            goto Label_003B;
-        Label_06B3:
-            if (num3 != 9)
-            {
-                goto Label_06E6;
-            }
-            this.dict[off] = new Dis(2, string.Format("Pause {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_06E6:
-            if (num3 != 10)
-            {
-                goto Label_0741;
-            }
-            num32 = this.br.ReadByte();
-            num33 = this.br.ReadByte();
-            this.dict[off] = new Dis(4, string.Format("Cmda {0:x3} {1:x2} {2:x2} ", (int) (num2 >> 4), (int) num32, (int) num33));
-            num = off + 2;
-            goto Label_003B;
-        Label_0741:
-            if (num3 != 11)
-            {
-                goto Label_0774;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmdb {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_0774:
-            if (num3 != 12)
-            {
-                goto Label_07A7;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmdc {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_07A7:
-            if (num3 != 13)
-            {
-                goto Label_07DA;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmdd {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_07DA:
-            if (num3 != 14)
-            {
-                goto Label_080D;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmde {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_080D:
-            if (num3 != 15)
-            {
-                goto Label_0840;
-            }
-            this.dict[off] = new Dis(2, string.Format("Cmdf {0:x3} ", (int) (num2 >> 4)));
-            num = off + 1;
-            goto Label_003B;
-        Label_0840:
-            this.dict[off] = new Dis(1, string.Format("? {0:x4} ", (int) num2, (long) (this.si.Position - 2L)));
-        Label_0875:
-            if (queue.Count != null)
-            {
-                goto Label_0034;
-            }
-            return;
-        }
+                string s;
+                if (labels.TryGetValue(x, out s))
+                {
+                    wri.WriteLine("{0}:", s);
+                }
+                if (errors.ContainsKey(x))
+                {
+                    wri.WriteLine(" ; Can't reach here!");
+                }
+                Dis o;
+                if (dict.TryGetValue(x, out o))
+                {
+                    wri.WriteLine(" {0,-40}; {1,4} {2:x}", o.Desc, x, 0x10 + 2 * x);
 
-        [CompilerGenerated]
-        private sealed class <>c__DisplayClass2
-        {
-            public int x1;
-
-            public <>c__DisplayClass2()
-            {
-                base..ctor();
-                return;
-            }
-
-            public bool <Gen>b__0(int p)
-            {
-                return (p > this.x1);
+                    if (x < cx)
+                    {
+                        int x1 = x + o.Len / 2;
+                        if (dict.ContainsKey(x1) == false)
+                        {
+                            int x2 = dict.Keys.First(p => p > x1);
+                            if (x2 - x1 > 1)
+                            {
+                                wri.WriteLine(" ; Unscanned {2} words. {0} to {1}", x1, x2 - 1, x2 - x1);
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        private class CmdObs
+        SortedDictionary<int, Dis> dict = new SortedDictionary<int, Dis>();
+        SortedDictionary<int, String> labels = new SortedDictionary<int, string>();
+        SortedDictionary<int, object> errors = new SortedDictionary<int, object>();
+
+        class Dis
         {
-            private int stat;
+            public int Len = 0;
+            public String Desc = String.Empty;
 
-            public CmdObs()
+            public Dis(int cb, String s)
             {
-                this.stat = -1;
-                base..ctor();
-                return;
+                this.Len = cb;
+                this.Desc = s;
             }
+        }
 
+        class Ut
+        {
+            public static string Read0Str(BinaryReader br)
+            {
+                String s = "";
+                while (true)
+                {
+                    int v = br.ReadByte();
+                    if (v == 0)
+                        break;
+                    s += (char)v;
+                }
+                return s;
+            }
+        }
+
+        class CmdObs
+        {
             public void Eat(int v0)
             {
-                if (0xe0 != (0xff & v0))
+                if (0xE0 == (255 & v0))
                 {
-                    goto Label_0016;
+                    stat = 0;
                 }
-                this.stat = 0;
-                return;
-            Label_0016:
-                if (0xc0 != (0xff & v0))
+                else if (0xC0 == (255 & v0) && stat >= 0)
                 {
-                    goto Label_003C;
+                    stat++;
                 }
-                if (this.stat < 0)
+                else
                 {
-                    goto Label_003C;
+                    stat = -1;
                 }
-                this.stat += 1;
-                return;
-            Label_003C:
-                this.stat = -1;
-                return;
             }
 
             public T Curt
             {
                 get
                 {
-                    int num;
-                    switch ((this.stat - 2))
+                    switch (stat)
                     {
-                        case 0:
-                            goto Label_0035;
-
-                        case 1:
-                            goto Label_0035;
-
                         case 2:
-                            goto Label_0035;
-
                         case 3:
-                            goto Label_0035;
-
                         case 4:
-                            goto Label_0035;
-
                         case 5:
-                            goto Label_0035;
-
                         case 6:
-                            goto Label_0035;
-
                         case 7:
-                            goto Label_0035;
-
                         case 8:
-                            goto Label_0035;
+                        case 9:
+                        case 10:
+                            return T.Label;
                     }
-                    goto Label_0037;
-                Label_0035:
-                    return 1;
-                Label_0037:
-                    return 0;
+                    return T.Val;
                 }
             }
+
+            int stat = -1;
 
             public enum T
             {
-                Val,
-                Label
+                Val, Label,
             }
         }
 
-        private class Dis
+        private void Walk(int key, int off)
         {
-            public string Desc;
-            public int Len;
-
-            public Dis(int cb, string s)
+            Queue<int> offq = new Queue<int>();
+            offq.Enqueue(off);
+            labels[off] = "K" + key;
+            CmdObs obs = new CmdObs();
+            while (offq.Count != 0)
             {
-                this.Desc = string.Empty;
-                base..ctor();
-                this.Len = cb;
-                this.Desc = s;
-                return;
-            }
-        }
-
-        private class Ut
-        {
-            public Ut()
-            {
-                base..ctor();
-                return;
-            }
-
-            public static string Read0Str(BinaryReader br)
-            {
-                string str;
-                int num;
-                str = "";
-            Label_0006:
-                num = br.ReadByte();
-                if (num == null)
+                int nextoff = offq.Dequeue();
+                while (true)
                 {
-                    goto Label_0020;
+                    off = nextoff;
+
+                    if (dict.ContainsKey(off)) break;
+
+                    si.Position = 0x10 + off * 2;
+
+                    if (si.Position >= si.Length)
+                    {
+                        errors[off] = null;
+                        break; // 仕方なし
+                    }
+
+                    try
+                    {
+                        int v0 = br.ReadUInt16();
+                        int cm4 = v0 & 15;
+                        int cm8 = v0 & 255;
+
+                        obs.Eat(v0);
+
+                        if (false) { }
+                        // -- 16 bits cmd
+                        else if (v0 == 0xffff)
+                        {
+                            dict[off] = new Dis(2, String.Format("TERM"));
+                            break;
+                        }
+                        // -- 8 bits cmd
+                        else if (cm8 == 0x30)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmd30 {0:x2} {1:x2} {2:x2} ", v0 >> 8, v2, v3));
+                            nextoff = off + 2;
+                        }
+                        else if (cm8 == 0x60)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmd60 {0:x2} {1:x2} {2:x2} ", v0 >> 8, v2, v3));
+                            nextoff = off + 2;
+                        }
+                        else if (cm8 == 0xa0)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmda0 {0:x2} {1:x2} {2:x2} ", v0 >> 8, v2, v3));
+                            nextoff = off + 2;
+                        }
+                        else if (cm8 == 0xc0)
+                        {
+                            int v2 = br.ReadInt32();
+                            if (obs.Curt == CmdObs.T.Label && v2 != 0)
+                            {
+                                int newoff = v2;
+                                offq.Enqueue(newoff);
+                                dict[off] = new Dis(6, String.Format("Cmdc0l {0:x2} {1} ", v0 >> 8, GenLabel(newoff)));
+                            }
+                            else
+                            {
+                                dict[off] = new Dis(6, String.Format("Cmdc0i {0:x2} {1:x8} ", v0 >> 8, v2));
+                            }
+                            nextoff = off + 3;
+                        }
+                        else if (cm8 == 0xe0)
+                        {
+                            int v2 = br.ReadUInt16();
+                            si.Position = 0x10 + v2 * 2;
+                            dict[off] = new Dis(4, String.Format("Print {0:x2} '{1}' ", v0 >> 8, Ut.Read0Str(br)));
+                            nextoff = off + 2;
+                        }
+                        else if (cm8 == 0x0B)
+                        {
+                            int v2 = br.ReadInt32();
+                            int newoff = off + 3 + v2;
+                            dict[off] = new Dis(6, String.Format("Call {0:x3} {1} ; {2} ", v0 >> 4, GenLabel(newoff), v2));
+                            offq.Enqueue(newoff);
+                            nextoff = off + 3;
+                        }
+#if false
+                        else if (cm8 == 0x01) {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmd01 {0:x2} {1:x2} {2:x2} ", v0 >> 8, v2, v3));
+                            nextoff = off + 2;
+                        }
+#endif
+                        else if (cm8 == 0x00)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            int v4 = br.ReadByte();
+                            int v5 = br.ReadByte();
+                            dict[off] = new Dis(6, String.Format("Cmd00 {0:x2} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 8, v2, v3, v4, v5));
+                            nextoff = off + 3;
+                        }
+#if false
+                        else if (cm8 == 0x0a) {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmd0a {0:x2} {1:x2} ", v2, v3));
+                            nextoff = off + 2;
+                        }
+#endif
+                        else if (cm8 == 0x40)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            int v4 = br.ReadByte();
+                            int v5 = br.ReadByte();
+                            dict[off] = new Dis(6, String.Format("Cmd40 {0:x2} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 8, v2, v3, v4, v5));
+                            nextoff = off + 3;
+                        }
+                        else if (cm8 == 0x89)
+                        {
+                            dict[off] = new Dis(2, String.Format("Ret {0:x2}", v0 >> 8));
+                            //nextoff = off + 1;
+                            break;
+                        }
+                        // -- 4 bits cmd
+                        else if (cm4 == 0)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            int v4 = br.ReadByte();
+                            int v5 = br.ReadByte();
+                            dict[off] = new Dis(6, String.Format("Cmd0 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 4, v2, v3, v4, v5));
+                            nextoff = off + 3;
+                        }
+                        else if (cm4 == 1)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmd1 {0:x3} {1:x2} {2:x2} ", v0 >> 4, v2, v3));
+                            nextoff = off + 2;
+                        }
+                        else if (cm4 == 2)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            int v4 = br.ReadByte();
+                            int v5 = br.ReadByte();
+                            dict[off] = new Dis(6, String.Format("Cmd2 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 4, v2, v3, v4, v5));
+                            nextoff = off + 3;
+                        }
+                        else if (cm4 == 3)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmd3 {0:x3} {1:x2} {2:x2} ", v0 >> 4, v2, v3));
+                            nextoff = off + 2;
+                        }
+                        else if (cm4 == 4)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmd4 {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 5)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmd5 {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 6)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmd6 {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 7)
+                        {
+                            int v2 = br.ReadInt16();
+                            int newoff = off + 2 + v2;
+                            dict[off] = new Dis(4, String.Format("J7 {0:x3} {1} ", v0 >> 4, GenLabel(newoff)));
+                            offq.Enqueue(newoff);
+                            bool noc = (v0 >> 4) == 0;
+                            if (noc) break;
+                            nextoff = off + 2;
+                        }
+                        else if (cm4 == 8)
+                        {
+                            int v2 = br.ReadInt16();
+                            int newoff = off + 2 + v2;
+                            dict[off] = new Dis(4, String.Format("J8 {0:x3} {1} ", v0 >> 4, GenLabel(newoff)));
+                            offq.Enqueue(newoff);
+                            nextoff = off + 2;
+                        }
+                        else if (cm4 == 9)
+                        {
+                            dict[off] = new Dis(2, String.Format("Pause {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 10)
+                        {
+                            int v2 = br.ReadByte();
+                            int v3 = br.ReadByte();
+                            dict[off] = new Dis(4, String.Format("Cmda {0:x3} {1:x2} {2:x2} ", v0 >> 4, v2, v3));
+                            nextoff = off + 2;
+                        }
+                        else if (cm4 == 11)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmdb {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 12)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmdc {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 13)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmdd {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 14)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmde {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        else if (cm4 == 15)
+                        {
+                            dict[off] = new Dis(2, String.Format("Cmdf {0:x3} ", v0 >> 4));
+                            nextoff = off + 1;
+                        }
+                        // -- unknown
+                        else
+                        {
+                            dict[off] = new Dis(1, String.Format("? {0:x4} ", v0, si.Position - 2));
+                            break;
+                            //nextoff = off + 1;
+                            //throw new NotSupportedException(String.Format("{1:X}  {0:x4}", v0, si.Position));
+                        }
+                    }
+                    catch (EndOfStreamException)
+                    {
+                        errors[off] = null;
+                        break;
+                    }
                 }
-                str = str + ((char) ((ushort) num));
-                goto Label_0006;
-            Label_0020:
-                return str;
             }
+        }
+
+        private string GenLabel(int newoff)
+        {
+            string s;
+            if (!labels.TryGetValue(newoff, out s))
+            {
+                s = String.Format("L{0:0000}", newoff);
+                labels[newoff] = s;
+            }
+            return s;
         }
     }
 }
-

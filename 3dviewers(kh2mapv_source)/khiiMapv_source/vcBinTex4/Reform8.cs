@@ -1,297 +1,280 @@
-﻿namespace vcBinTex4
+using System;
+namespace vcBinTex4
 {
-    using System;
-
-    public class Reform8
-    {
-        private static readonly byte[] tbl8bc;
-        private static readonly byte[] tbl8c0;
-        private static readonly byte[] tbl8c1;
-
-        static Reform8()
-        {
-            tbl8bc = new byte[] { 
-                0, 1, 4, 5, 0x10, 0x11, 20, 0x15, 2, 3, 6, 7, 0x12, 0x13, 0x16, 0x17, 
-                8, 9, 12, 13, 0x18, 0x19, 0x1c, 0x1d, 10, 11, 14, 15, 0x1a, 0x1b, 30, 0x1f
-             };
-            tbl8c0 = new byte[] { 
-                0, 4, 0x10, 20, 0x20, 0x24, 0x30, 0x34, 2, 6, 0x12, 0x16, 0x22, 0x26, 50, 0x36, 
-                8, 12, 0x18, 0x1c, 40, 0x2c, 0x38, 60, 10, 14, 0x1a, 30, 0x2a, 0x2e, 0x3a, 0x3e, 
-                0x21, 0x25, 0x31, 0x35, 1, 5, 0x11, 0x15, 0x23, 0x27, 0x33, 0x37, 3, 7, 0x13, 0x17, 
-                0x29, 0x2d, 0x39, 0x3d, 9, 13, 0x19, 0x1d, 0x2b, 0x2f, 0x3b, 0x3f, 11, 15, 0x1b, 0x1f
-             };
-            tbl8c1 = new byte[] { 
-                0x20, 0x24, 0x30, 0x34, 0, 4, 0x10, 20, 0x22, 0x26, 50, 0x36, 2, 6, 0x12, 0x16, 
-                40, 0x2c, 0x38, 60, 8, 12, 0x18, 0x1c, 0x2a, 0x2e, 0x3a, 0x3e, 10, 14, 0x1a, 30, 
-                1, 5, 0x11, 0x15, 0x21, 0x25, 0x31, 0x35, 3, 7, 0x13, 0x17, 0x23, 0x27, 0x33, 0x37, 
-                9, 13, 0x19, 0x1d, 0x29, 0x2d, 0x39, 0x3d, 11, 15, 0x1b, 0x1f, 0x2b, 0x2f, 0x3b, 0x3f
-             };
-            return;
-        }
-
-        public Reform8()
-        {
-            base..ctor();
-            return;
-        }
-
-        public static byte[] Decode8(byte[] bin, int bw, int bh)
-        {
-            byte[] buffer;
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            int num7;
-            int num8;
-            byte[] buffer2;
-            int num9;
-            int num10;
-            int num11;
-            int num12;
-            int num13;
-            buffer = new byte[(int) bin.Length];
-            num = 0;
-            goto Label_0113;
-        Label_0010:
-            num2 = 0;
-            goto Label_0101;
-        Label_0017:
-            num3 = 0x2000 * ((num2 / 0x80) + (bw * (num / 0x40)));
-            num4 = 0;
-            goto Label_00F0;
-        Label_0034:
-            num5 = 0;
-            goto Label_00DD;
-        Label_003C:
-            num6 = 0x100 * tbl8bc[(num5 / 0x10) + (8 * (num4 / 0x10))];
-            num7 = 0;
-            goto Label_00D1;
-        Label_005C:
-            num8 = 0x40 * num7;
-            buffer2 = ((num7 & 1) == null) ? tbl8c0 : tbl8c1;
-            num9 = 0;
-            goto Label_00C5;
-        Label_007C:
-            num10 = ((num3 + num6) + num8) + buffer2[num9];
-            num11 = (num2 + num5) + (num9 % 0x10);
-            num12 = ((num + num4) + (4 * num7)) + (num9 / 0x10);
-            num13 = num11 + ((0x80 * bw) * num12);
-            buffer[num13] = bin[num10];
-            num9 += 1;
-        Label_00C5:
-            if (num9 < 0x40)
-            {
-                goto Label_007C;
-            }
-            num7 += 1;
-        Label_00D1:
-            if (num7 < 4)
-            {
-                goto Label_005C;
-            }
-            num5 += 0x10;
-        Label_00DD:
-            if (num5 < 0x80)
-            {
-                goto Label_003C;
-            }
-            num4 += 0x10;
-        Label_00F0:
-            if (num4 < 0x40)
-            {
-                goto Label_0034;
-            }
-            num2 += 0x80;
-        Label_0101:
-            if (num2 < (0x80 * bw))
-            {
-                goto Label_0017;
-            }
-            num += 0x40;
-        Label_0113:
-            if (num < (0x40 * bh))
-            {
-                goto Label_0010;
-            }
-            return buffer;
-        }
-
-        public static byte[] Decode8c(byte[] gsram, int cx, int cy, int readoff, int bw128)
-        {
-            byte[] buffer;
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            byte[] buffer2;
-            int num7;
-            int num8;
-            int num9;
-            buffer = new byte[cx * cy];
-            num = 0;
-            goto Label_00AB;
-        Label_0010:
-            num2 = 0;
-            goto Label_00A0;
-        Label_0017:
-            num3 = 0x2000 * ((num2 / 0x80) + (bw128 * (num / 0x40)));
-            num4 = 0x100 * tbl8bc[((num2 & 0x7f) / 0x10) + (8 * ((num & 0x3f) / 0x10))];
-            num5 = (num & 15) / 4;
-            num6 = 0x40 * num5;
-            buffer2 = ((num5 & 1) == null) ? tbl8c0 : tbl8c1;
-            num7 = (num2 & 15) + (0x10 * (num & 3));
-            num8 = (((readoff + num3) + num4) + num6) + buffer2[num7];
-            num9 = num2 + (cx * num);
-            buffer[num9] = gsram[num8];
-            num2 += 1;
-        Label_00A0:
-            if (num2 < cx)
-            {
-                goto Label_0017;
-            }
-            num += 1;
-        Label_00AB:
-            if (num < cy)
-            {
-                goto Label_0010;
-            }
-            return buffer;
-        }
-
-        public static byte[] Encode8(byte[] bin, int bw, int bh)
-        {
-            byte[] buffer;
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            int num7;
-            int num8;
-            byte[] buffer2;
-            int num9;
-            int num10;
-            int num11;
-            int num12;
-            int num13;
-            buffer = new byte[(int) bin.Length];
-            num = 0;
-            goto Label_0113;
-        Label_0010:
-            num2 = 0;
-            goto Label_0101;
-        Label_0017:
-            num3 = 0x2000 * ((num2 / 0x80) + (bw * (num / 0x40)));
-            num4 = 0;
-            goto Label_00F0;
-        Label_0034:
-            num5 = 0;
-            goto Label_00DD;
-        Label_003C:
-            num6 = 0x100 * tbl8bc[(num5 / 0x10) + (8 * (num4 / 0x10))];
-            num7 = 0;
-            goto Label_00D1;
-        Label_005C:
-            num8 = 0x40 * num7;
-            buffer2 = ((num7 & 1) == null) ? tbl8c0 : tbl8c1;
-            num9 = 0;
-            goto Label_00C5;
-        Label_007C:
-            num10 = ((num3 + num6) + num8) + buffer2[num9];
-            num11 = (num2 + num5) + (num9 % 0x10);
-            num12 = ((num + num4) + (4 * num7)) + (num9 / 0x10);
-            num13 = num11 + ((0x80 * bw) * num12);
-            buffer[num10] = bin[num13];
-            num9 += 1;
-        Label_00C5:
-            if (num9 < 0x40)
-            {
-                goto Label_007C;
-            }
-            num7 += 1;
-        Label_00D1:
-            if (num7 < 4)
-            {
-                goto Label_005C;
-            }
-            num5 += 0x10;
-        Label_00DD:
-            if (num5 < 0x80)
-            {
-                goto Label_003C;
-            }
-            num4 += 0x10;
-        Label_00F0:
-            if (num4 < 0x40)
-            {
-                goto Label_0034;
-            }
-            num2 += 0x80;
-        Label_0101:
-            if (num2 < (0x80 * bw))
-            {
-                goto Label_0017;
-            }
-            num += 0x40;
-        Label_0113:
-            if (num < (0x40 * bh))
-            {
-                goto Label_0010;
-            }
-            return buffer;
-        }
-
-        public static void Encode8b(byte[] src, byte[] gsram, int rrw, int rrh, int ddax, int dday, int baseoff, int bw128)
-        {
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            int num7;
-            int num8;
-            byte[] buffer;
-            int num9;
-            int num10;
-            int num11;
-            num = 0;
-            goto Label_00AF;
-        Label_0007:
-            num2 = dday + num;
-            num3 = 0;
-            goto Label_00A4;
-        Label_0013:
-            num4 = ddax + num3;
-            num5 = 0x2000 * ((num4 / 0x80) + (bw128 * (num2 / 0x40)));
-            num6 = 0x100 * tbl8bc[((num4 & 0x7f) / 0x10) + (8 * ((num2 & 0x3f) / 0x10))];
-            num7 = (num2 & 15) / 4;
-            num8 = 0x40 * num7;
-            buffer = ((num7 & 1) == null) ? tbl8c0 : tbl8c1;
-            num9 = (num4 & 15) + (0x10 * (num2 & 3));
-            num10 = (((baseoff + num5) + num6) + num8) + buffer[num9];
-            num11 = num3 + (rrw * num);
-            gsram[num10] = src[num11];
-            num3 += 1;
-        Label_00A4:
-            if (num3 < rrw)
-            {
-                goto Label_0013;
-            }
-            num += 1;
-        Label_00AF:
-            if (num < rrh)
-            {
-                goto Label_0007;
-            }
-            return;
-        }
-    }
+	public class Reform8
+	{
+		private static readonly byte[] tbl8bc = new byte[]
+		{
+			0,
+			1,
+			4,
+			5,
+			16,
+			17,
+			20,
+			21,
+			2,
+			3,
+			6,
+			7,
+			18,
+			19,
+			22,
+			23,
+			8,
+			9,
+			12,
+			13,
+			24,
+			25,
+			28,
+			29,
+			10,
+			11,
+			14,
+			15,
+			26,
+			27,
+			30,
+			31
+		};
+		private static readonly byte[] tbl8c0 = new byte[]
+		{
+			0,
+			4,
+			16,
+			20,
+			32,
+			36,
+			48,
+			52,
+			2,
+			6,
+			18,
+			22,
+			34,
+			38,
+			50,
+			54,
+			8,
+			12,
+			24,
+			28,
+			40,
+			44,
+			56,
+			60,
+			10,
+			14,
+			26,
+			30,
+			42,
+			46,
+			58,
+			62,
+			33,
+			37,
+			49,
+			53,
+			1,
+			5,
+			17,
+			21,
+			35,
+			39,
+			51,
+			55,
+			3,
+			7,
+			19,
+			23,
+			41,
+			45,
+			57,
+			61,
+			9,
+			13,
+			25,
+			29,
+			43,
+			47,
+			59,
+			63,
+			11,
+			15,
+			27,
+			31
+		};
+		private static readonly byte[] tbl8c1 = new byte[]
+		{
+			32,
+			36,
+			48,
+			52,
+			0,
+			4,
+			16,
+			20,
+			34,
+			38,
+			50,
+			54,
+			2,
+			6,
+			18,
+			22,
+			40,
+			44,
+			56,
+			60,
+			8,
+			12,
+			24,
+			28,
+			42,
+			46,
+			58,
+			62,
+			10,
+			14,
+			26,
+			30,
+			1,
+			5,
+			17,
+			21,
+			33,
+			37,
+			49,
+			53,
+			3,
+			7,
+			19,
+			23,
+			35,
+			39,
+			51,
+			55,
+			9,
+			13,
+			25,
+			29,
+			41,
+			45,
+			57,
+			61,
+			11,
+			15,
+			27,
+			31,
+			43,
+			47,
+			59,
+			63
+		};
+		public static byte[] Decode8(byte[] bin, int bw, int bh)
+		{
+			byte[] array = new byte[bin.Length];
+			for (int i = 0; i < 64 * bh; i += 64)
+			{
+				for (int j = 0; j < 128 * bw; j += 128)
+				{
+					int num = 8192 * (j / 128 + bw * (i / 64));
+					for (int k = 0; k < 64; k += 16)
+					{
+						for (int l = 0; l < 128; l += 16)
+						{
+							int num2 = 256 * (int)Reform8.tbl8bc[l / 16 + 8 * (k / 16)];
+							for (int m = 0; m < 4; m++)
+							{
+								int num3 = 64 * m;
+								byte[] array2 = ((m & 1) == 0) ? Reform8.tbl8c0 : Reform8.tbl8c1;
+								for (int n = 0; n < 64; n++)
+								{
+									int num4 = num + num2 + num3 + (int)array2[n];
+									int num5 = j + l + n % 16;
+									int num6 = i + k + 4 * m + n / 16;
+									int num7 = num5 + 128 * bw * num6;
+									array[num7] = bin[num4];
+								}
+							}
+						}
+					}
+				}
+			}
+			return array;
+		}
+		public static byte[] Encode8(byte[] bin, int bw, int bh)
+		{
+			byte[] array = new byte[bin.Length];
+			for (int i = 0; i < 64 * bh; i += 64)
+			{
+				for (int j = 0; j < 128 * bw; j += 128)
+				{
+					int num = 8192 * (j / 128 + bw * (i / 64));
+					for (int k = 0; k < 64; k += 16)
+					{
+						for (int l = 0; l < 128; l += 16)
+						{
+							int num2 = 256 * (int)Reform8.tbl8bc[l / 16 + 8 * (k / 16)];
+							for (int m = 0; m < 4; m++)
+							{
+								int num3 = 64 * m;
+								byte[] array2 = ((m & 1) == 0) ? Reform8.tbl8c0 : Reform8.tbl8c1;
+								for (int n = 0; n < 64; n++)
+								{
+									int num4 = num + num2 + num3 + (int)array2[n];
+									int num5 = j + l + n % 16;
+									int num6 = i + k + 4 * m + n / 16;
+									int num7 = num5 + 128 * bw * num6;
+									array[num4] = bin[num7];
+								}
+							}
+						}
+					}
+				}
+			}
+			return array;
+		}
+		public static void Encode8b(byte[] src, byte[] gsram, int rrw, int rrh, int ddax, int dday, int baseoff, int bw128)
+		{
+			for (int i = 0; i < rrh; i++)
+			{
+				int num = dday + i;
+				for (int j = 0; j < rrw; j++)
+				{
+					int num2 = ddax + j;
+					int num3 = 8192 * (num2 / 128 + bw128 * (num / 64));
+					int num4 = 256 * (int)Reform8.tbl8bc[(num2 & 127) / 16 + 8 * ((num & 63) / 16)];
+					int num5 = (num & 15) / 4;
+					int num6 = 64 * num5;
+					byte[] array = ((num5 & 1) == 0) ? Reform8.tbl8c0 : Reform8.tbl8c1;
+					int num7 = (num2 & 15) + 16 * (num & 3);
+					int num8 = baseoff + num3 + num4 + num6 + (int)array[num7];
+					int num9 = j + rrw * i;
+					gsram[num8] = src[num9];
+				}
+			}
+		}
+		public static byte[] Decode8c(byte[] gsram, int cx, int cy, int readoff, int bw128)
+		{
+			byte[] array = new byte[cx * cy];
+			for (int i = 0; i < cy; i++)
+			{
+				for (int j = 0; j < cx; j++)
+				{
+					int num = 8192 * (j / 128 + bw128 * (i / 64));
+					int num2 = 256 * (int)Reform8.tbl8bc[(j & 127) / 16 + 8 * ((i & 63) / 16)];
+					int num3 = (i & 15) / 4;
+					int num4 = 64 * num3;
+					byte[] array2 = ((num3 & 1) == 0) ? Reform8.tbl8c0 : Reform8.tbl8c1;
+					int num5 = (j & 15) + 16 * (i & 3);
+					int num6 = readoff + num + num2 + num4 + (int)array2[num5];
+					int num7 = j + cx * i;
+					array[num7] = gsram[num6];
+				}
+			}
+			return array;
+		}
+	}
 }
-

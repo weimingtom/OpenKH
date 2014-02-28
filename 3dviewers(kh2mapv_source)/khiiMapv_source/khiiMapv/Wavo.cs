@@ -1,19 +1,14 @@
-﻿namespace khiiMapv
+using System;
+namespace khiiMapv
 {
-    using System;
-
-    public class Wavo
-    {
-        public byte[] bin;
-        public string fn;
-
-        public Wavo(string fn, byte[] bin)
-        {
-            base..ctor();
-            this.fn = fn;
-            this.bin = bin;
-            return;
-        }
-    }
+	public class Wavo
+	{
+		public string fn;
+		public byte[] bin;
+		public Wavo(string fn, byte[] bin)
+		{
+			this.fn = fn;
+			this.bin = bin;
+		}
+	}
 }
-

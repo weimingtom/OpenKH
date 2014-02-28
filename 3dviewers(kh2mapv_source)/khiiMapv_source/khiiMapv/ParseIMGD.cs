@@ -1,224 +1,128 @@
-﻿namespace khiiMapv
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using vcBinTex4;
+using vwBinTex2;
+namespace khiiMapv
 {
-    using System;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using vcBinTex4;
-    using vwBinTex2;
-
-    public class ParseIMGD
-    {
-        public ParseIMGD()
-        {
-            base..ctor();
-            return;
-        }
-
-        public static unsafe PicIMGD TakeIMGD(MemoryStream si)
-        {
-            BinaryReader reader;
-            int num;
-            int num2;
-            int num3;
-            int num4;
-            int num5;
-            int num6;
-            int num7;
-            int num8;
-            bool flag;
-            byte[] buffer;
-            byte[] buffer2;
-            int num9;
-            int num10;
-            int num11;
-            int num12;
-            int num13;
-            int num14;
-            byte[] buffer3;
-            Bitmap bitmap;
-            BitmapData data;
-            byte[] buffer4;
-            byte[] buffer5;
-            ColorPalette palette;
-            int num15;
-            int num16;
-            int num17;
-            int num18;
-            int num19;
-            int num20;
-            int num21;
-            byte[] buffer6;
-            Bitmap bitmap2;
-            BitmapData data2;
-            byte[] buffer7;
-            byte[] buffer8;
-            ColorPalette palette2;
-            int num22;
-            int num23;
-            int num24;
-            si.Position = 0L;
-            if (si.ReadByte() == 0x49)
-            {
-                goto Label_001D;
-            }
-            throw new NotSupportedException("!IMGD");
-        Label_001D:
-            if (si.ReadByte() == 0x4d)
-            {
-                goto Label_0032;
-            }
-            throw new NotSupportedException("!IMGD");
-        Label_0032:
-            if (si.ReadByte() == 0x47)
-            {
-                goto Label_0047;
-            }
-            throw new NotSupportedException("!IMGD");
-        Label_0047:
-            if (si.ReadByte() == 0x44)
-            {
-                goto Label_005C;
-            }
-            throw new NotSupportedException("!IMGD");
-        Label_005C:
-            reader = new BinaryReader(si);
-            reader.ReadInt32();
-            num = reader.ReadInt32();
-            num2 = reader.ReadInt32();
-            num3 = reader.ReadInt32();
-            num4 = reader.ReadInt32();
-            si.Position = 0x1cL;
-            num5 = reader.ReadUInt16();
-            num6 = reader.ReadUInt16();
-            si.Position = 0x26L;
-            num7 = reader.ReadUInt16();
-            si.Position = 60L;
-            flag = reader.ReadByte() == 7;
-            si.Position = (long) num;
-            buffer = reader.ReadBytes(num2);
-            si.Position = (long) num3;
-            buffer2 = reader.ReadBytes(num4);
-            num9 = num5;
-            num10 = num6;
-            if (num7 != 0x13)
-            {
-                goto Label_0227;
-            }
-            num11 = num5 / 0x80;
-            num12 = num6 / 0x40;
-            num13 = num11;
-            num14 = num12;
-            buffer3 = (flag != null) ? Reform8.Decode8(Reform32.Encode32(buffer, num11, num12), num13, num14) : buffer;
-            bitmap = new Bitmap(num9, num10, 0x30803);
-            data = bitmap.LockBits(Rectangle.FromLTRB(0, 0, num9, num10), 2, 0x30803);
-        Label_015E:
-            try
-            {
-                Marshal.Copy(buffer3, 0, data.Scan0, (int) buffer3.Length);
-                goto Label_017D;
-            }
-            finally
-            {
-            Label_0173:
-                bitmap.UnlockBits(data);
-            }
-        Label_017D:
-            buffer4 = new byte[0x2000];
-            Array.Copy(buffer2, 0, buffer4, 0, Math.Min(0x2000, (int) buffer2.Length));
-            buffer5 = buffer4;
-            palette = bitmap.Palette;
-            num15 = 0;
-            goto Label_020D;
-        Label_01B4:
-            num16 = num15;
-            num17 = KHcv8pal_swap34.repl(num15);
-            *(&(palette.Entries[num17])) = Color.FromArgb(Math.Min(0xff, buffer5[(4 * num16) + 3] * 2), buffer5[4 * num16], buffer5[(4 * num16) + 1], buffer5[(4 * num16) + 2]);
-            num15 += 1;
-        Label_020D:
-            if (num15 < 0x100)
-            {
-                goto Label_01B4;
-            }
-            bitmap.Palette = palette;
-            return new PicIMGD(bitmap);
-        Label_0227:
-            if (num7 != 20)
-            {
-                goto Label_035A;
-            }
-            num18 = num5 / 0x80;
-            num19 = num6 / 0x80;
-            num20 = num18;
-            num21 = num19;
-            buffer6 = (flag != null) ? Reform4.Decode4(Reform32.Encode32(buffer, num18, num19), num20, num21) : HLUt.Swap(buffer);
-            bitmap2 = new Bitmap(num9, num10, 0x30402);
-            data2 = bitmap2.LockBits(Rectangle.FromLTRB(0, 0, num9, num10), 2, 0x30402);
-        Label_0299:
-            try
-            {
-                Marshal.Copy(buffer6, 0, data2.Scan0, (int) buffer6.Length);
-                goto Label_02B8;
-            }
-            finally
-            {
-            Label_02AE:
-                bitmap2.UnlockBits(data2);
-            }
-        Label_02B8:
-            buffer7 = new byte[0x2000];
-            Array.Copy(buffer2, 0, buffer7, 0, Math.Min(0x2000, (int) buffer2.Length));
-            buffer8 = buffer7;
-            palette2 = bitmap2.Palette;
-            num22 = 0;
-            goto Label_0343;
-        Label_02EF:
-            num23 = num22;
-            num24 = num22;
-            *(&(palette2.Entries[num24])) = Color.FromArgb(Math.Min(0xff, buffer8[(4 * num23) + 3] * 2), buffer8[4 * num23], buffer8[(4 * num23) + 1], buffer8[(4 * num23) + 2]);
-            num22 += 1;
-        Label_0343:
-            if (num22 < 0x10)
-            {
-                goto Label_02EF;
-            }
-            bitmap2.Palette = palette2;
-            return new PicIMGD(bitmap2);
-        Label_035A:
-            throw new NotSupportedException("v26 = " + &num7.ToString("X"));
-        }
-
-        private class HLUt
-        {
-            public HLUt()
-            {
-                base..ctor();
-                return;
-            }
-
-            public static byte[] Swap(byte[] bin)
-            {
-                int num;
-                byte[] buffer;
-                int num2;
-                byte num3;
-                num = (int) bin.Length;
-                buffer = new byte[num];
-                num2 = 0;
-                goto Label_0022;
-            Label_000F:
-                num3 = bin[num2];
-                buffer[num2] = (byte) ((num3 >> 4) | (num3 << 4));
-                num2 += 1;
-            Label_0022:
-                if (num2 < num)
-                {
-                    goto Label_000F;
-                }
-                return buffer;
-            }
-        }
-    }
+	public class ParseIMGD
+	{
+		private class HLUt
+		{
+			public static byte[] Swap(byte[] bin)
+			{
+				int num = bin.Length;
+				byte[] array = new byte[num];
+				for (int i = 0; i < num; i++)
+				{
+					byte b = bin[i];
+					array[i] = (byte)(b >> 4 | (int)b << 4);
+				}
+				return array;
+			}
+		}
+		public static PicIMGD TakeIMGD(MemoryStream si)
+		{
+			si.Position = 0L;
+			if (si.ReadByte() != 73)
+			{
+				throw new NotSupportedException("!IMGD");
+			}
+			if (si.ReadByte() != 77)
+			{
+				throw new NotSupportedException("!IMGD");
+			}
+			if (si.ReadByte() != 71)
+			{
+				throw new NotSupportedException("!IMGD");
+			}
+			if (si.ReadByte() != 68)
+			{
+				throw new NotSupportedException("!IMGD");
+			}
+			BinaryReader binaryReader = new BinaryReader(si);
+			binaryReader.ReadInt32();
+			int num = binaryReader.ReadInt32();
+			int count = binaryReader.ReadInt32();
+			int num2 = binaryReader.ReadInt32();
+			int count2 = binaryReader.ReadInt32();
+			si.Position = 28L;
+			int num3 = (int)binaryReader.ReadUInt16();
+			int num4 = (int)binaryReader.ReadUInt16();
+			si.Position = 38L;
+			int num5 = (int)binaryReader.ReadUInt16();
+			si.Position = 60L;
+			int num6 = (int)binaryReader.ReadByte();
+			bool flag = num6 == 7;
+			si.Position = (long)num;
+			byte[] array = binaryReader.ReadBytes(count);
+			si.Position = (long)num2;
+			byte[] array2 = binaryReader.ReadBytes(count2);
+			int num7 = num3;
+			int num8 = num4;
+			if (num5 == 19)
+			{
+				int num9 = num3 / 128;
+				int num10 = num4 / 64;
+				int bw = num9;
+				int bh = num10;
+				byte[] array3 = flag ? Reform8.Decode8(Reform32.Encode32(array, num9, num10), bw, bh) : array;
+				Bitmap bitmap = new Bitmap(num7, num8, PixelFormat.Format8bppIndexed);
+				BitmapData bitmapData = bitmap.LockBits(Rectangle.FromLTRB(0, 0, num7, num8), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+				try
+				{
+					Marshal.Copy(array3, 0, bitmapData.Scan0, array3.Length);
+				}
+				finally
+				{
+					bitmap.UnlockBits(bitmapData);
+				}
+				byte[] array4 = new byte[8192];
+				Array.Copy(array2, 0, array4, 0, Math.Min(8192, array2.Length));
+				byte[] array5 = array4;
+				ColorPalette palette = bitmap.Palette;
+				for (int i = 0; i < 256; i++)
+				{
+					int num11 = i;
+					int num12 = KHcv8pal_swap34.repl(i);
+					palette.Entries[num12] = Color.FromArgb(Math.Min(255, (int)(array5[4 * num11 + 3] * 2)), (int)array5[4 * num11], (int)array5[4 * num11 + 1], (int)array5[4 * num11 + 2]);
+				}
+				bitmap.Palette = palette;
+				return new PicIMGD(bitmap);
+			}
+			if (num5 == 20)
+			{
+				int num13 = num3 / 128;
+				int num14 = num4 / 128;
+				int bw2 = num13;
+				int bh2 = num14;
+				byte[] array6 = flag ? Reform4.Decode4(Reform32.Encode32(array, num13, num14), bw2, bh2) : ParseIMGD.HLUt.Swap(array);
+				Bitmap bitmap2 = new Bitmap(num7, num8, PixelFormat.Format4bppIndexed);
+				BitmapData bitmapData2 = bitmap2.LockBits(Rectangle.FromLTRB(0, 0, num7, num8), ImageLockMode.WriteOnly, PixelFormat.Format4bppIndexed);
+				try
+				{
+					Marshal.Copy(array6, 0, bitmapData2.Scan0, array6.Length);
+				}
+				finally
+				{
+					bitmap2.UnlockBits(bitmapData2);
+				}
+				byte[] array7 = new byte[8192];
+				Array.Copy(array2, 0, array7, 0, Math.Min(8192, array2.Length));
+				byte[] array8 = array7;
+				ColorPalette palette2 = bitmap2.Palette;
+				for (int j = 0; j < 16; j++)
+				{
+					int num15 = j;
+					int num16 = j;
+					palette2.Entries[num16] = Color.FromArgb(Math.Min(255, (int)(array8[4 * num15 + 3] * 2)), (int)array8[4 * num15], (int)array8[4 * num15 + 1], (int)array8[4 * num15 + 2]);
+				}
+				bitmap2.Palette = palette2;
+				return new PicIMGD(bitmap2);
+			}
+			throw new NotSupportedException("v26 = " + num5.ToString("X"));
+		}
+	}
 }
-
