@@ -1,86 +1,101 @@
-<VisualStudioProject>
-  <CSHARP ProjectType="Local" ProductVersion="7.10.3077" SchemaVersion="2.0" ProjectGuid="46C2B402-EB5C-4666-8AE7-F28C86053C9F">
-    <Build>
-      <Settings ApplicationIcon="" AssemblyKeyContainerName="" AssemblyName="khkh_xldMii" AssemblyOriginatorKeyFile="" DefaultClientScript="JScript" DefaultHTMLPageLayout="Grid" DefaultTargetSchema="IE50" DelaySign="false" OutputType="WinExe" PreBuildEvent="" PostBuildEvent="" RootNamespace="khkh_xldMii" RunPostBuildEvent="OnBuildSuccess" StartupObject="">
-        <Config Name="Debug" AllowUnsafeBlocks="false" BaseAddress="285212672" CheckForOverflowUnderflow="false" ConfigurationOverrideFile="" DefineConstants="DEBUG;TRACE" DocumentationFile="" DebugSymbols="true" FileAlignment="4096" IncrementalBuild="false" NoStdLib="false" NoWarn="" Optimize="false" OutputPath="bin\Debug\" RegisterForComInterop="false" RemoveIntegerChecks="false" TreatWarningsAsErrors="false" WarningLevel="4" />
-        <Config Name="Release" AllowUnsafeBlocks="false" BaseAddress="285212672" CheckForOverflowUnderflow="false" ConfigurationOverrideFile="" DefineConstants="TRACE" DocumentationFile="" DebugSymbols="false" FileAlignment="4096" IncrementalBuild="false" NoStdLib="false" NoWarn="" Optimize="true" OutputPath="bin\Release\" RegisterForComInterop="false" RemoveIntegerChecks="false" TreatWarningsAsErrors="false" WarningLevel="4" />
-      </Settings>
-      <References>
-        <Reference Name="mscorlib" AssemblyName="mscorlib" HintPath="mscorlib.dll" />
-        <Reference Name="System.Windows.Forms" AssemblyName="System.Windows.Forms" HintPath="System.Windows.Forms.dll" />
-        <Reference Name="System" AssemblyName="System" HintPath="System.dll" />
-        <Reference Name="SlimDX" AssemblyName="SlimDX" HintPath="SlimDX.dll" />
-        <Reference Name="System.Drawing" AssemblyName="System.Drawing" HintPath="System.Drawing.dll" />
-        <Reference Name="ef1Declib" AssemblyName="ef1Declib" HintPath="ef1Declib.dll" />
-        <Reference Name="System.Xml" AssemblyName="System.Xml" HintPath="System.Xml.dll" />
-      </References>
-    </Build>
-    <Files>
-      <Include>
-        <File RelPath="AssemblyInfo.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\Program.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\PTex3.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\ILoadf.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\IVwer.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\FormII.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vcBinTex4\Reform32.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vcBinTex4\Reform8.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vcBinTex4\Reform4.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vconv122\STim.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vconv122\Texfac.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vconv122\Patc.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vconv122\Texex2.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vconv122\TIMc.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vconv122\TIMf.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.V\SimaVU1.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.V\Body1.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.V\ProtInvalidTypeException.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\Mt1.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\FacMod.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\Fac1.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\Msetblk.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\PosTbl.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\Msetfst.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\To.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\T3.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\T4.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\T1.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\T2.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\T9.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mo\T9f.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\BCForm.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\UtSearchf.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\UtXmlGettext.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\MsetRM.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\MsetRawblk.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\WC.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Properties\Resources.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="hex04BinTrack\UC.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vwBinTex2\KHcv4pal.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vwBinTex2\KHcv8pal.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vwBinTex2\KHcv8pal_v2.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vwBinTex2\KHcv4pal_v2.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="vwBinTex2\KHcv8pal_swap34.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="hex04BinTrack\VU1Mem.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="hex04BinTrack\ParseVIF1.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii\ReadBar.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Properties\Settings.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mc\AxBone.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\T31.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\T11.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\T12.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\T13vif.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\T21.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\T32.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\RUtil.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\UtilAxBoneReader.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.Mx\Mdlxfst.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="_PrivateImplementationDetails_{A3FDFEE1-1CE5-483A-AE23-44BDCBB4F35E}.cs" SubType="Code" BuildAction="Compile" />
-        <File RelPath="khkh_xldMii.BCForm.resx" BuildAction="EmbeddedResource" />
-        <File RelPath="hex04BinTrack.UC.resx" BuildAction="EmbeddedResource" />
-        <File RelPath="khkh_xldMii.Properties.Resources.resx" BuildAction="EmbeddedResource" />
-        <File RelPath="khkh_xldMii.FormII.resx" BuildAction="EmbeddedResource" />
-      </Include>
-    </Files>
-  </CSHARP>
-</VisualStudioProject>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{4DC1AB6E-8865-4533-BAAB-D2B7E804DDF7}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>khkh_xldMii</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System" />
+    <Reference Include="SlimDX" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="ef1Declib" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="hex04BinTrack\ParseVIF1.cs" />
+    <Compile Include="hex04BinTrack\UC.cs" />
+    <Compile Include="hex04BinTrack\VU1Mem.cs" />
+    <Compile Include="khkh_xldMii.Mc\AxBone.cs" />
+    <Compile Include="khkh_xldMii.Mo\Fac1.cs" />
+    <Compile Include="khkh_xldMii.Mo\FacMod.cs" />
+    <Compile Include="khkh_xldMii.Mo\Msetblk.cs" />
+    <Compile Include="khkh_xldMii.Mo\Msetfst.cs" />
+    <Compile Include="khkh_xldMii.Mo\Mt1.cs" />
+    <Compile Include="khkh_xldMii.Mo\PosTbl.cs" />
+    <Compile Include="khkh_xldMii.Mo\T1.cs" />
+    <Compile Include="khkh_xldMii.Mo\T2.cs" />
+    <Compile Include="khkh_xldMii.Mo\T3.cs" />
+    <Compile Include="khkh_xldMii.Mo\T4.cs" />
+    <Compile Include="khkh_xldMii.Mo\T9.cs" />
+    <Compile Include="khkh_xldMii.Mo\T9f.cs" />
+    <Compile Include="khkh_xldMii.Mo\To.cs" />
+    <Compile Include="khkh_xldMii.Mx\Mdlxfst.cs" />
+    <Compile Include="khkh_xldMii.Mx\RUtil.cs" />
+    <Compile Include="khkh_xldMii.Mx\T11.cs" />
+    <Compile Include="khkh_xldMii.Mx\T12.cs" />
+    <Compile Include="khkh_xldMii.Mx\T13vif.cs" />
+    <Compile Include="khkh_xldMii.Mx\T21.cs" />
+    <Compile Include="khkh_xldMii.Mx\T31.cs" />
+    <Compile Include="khkh_xldMii.Mx\T32.cs" />
+    <Compile Include="khkh_xldMii.Mx\UtilAxBoneReader.cs" />
+    <Compile Include="khkh_xldMii.Properties\Resources.cs" />
+    <Compile Include="khkh_xldMii.Properties\Settings.cs" />
+    <Compile Include="khkh_xldMii.V\Body1.cs" />
+    <Compile Include="khkh_xldMii.V\ProtInvalidTypeException.cs" />
+    <Compile Include="khkh_xldMii.V\SimaVU1.cs" />
+    <Compile Include="khkh_xldMii\BCForm.cs" />
+    <Compile Include="khkh_xldMii\FormII.cs" />
+    <Compile Include="khkh_xldMii\ILoadf.cs" />
+    <Compile Include="khkh_xldMii\IVwer.cs" />
+    <Compile Include="khkh_xldMii\MsetRawblk.cs" />
+    <Compile Include="khkh_xldMii\MsetRM.cs" />
+    <Compile Include="khkh_xldMii\Program.cs" />
+    <Compile Include="khkh_xldMii\PTex3.cs" />
+    <Compile Include="khkh_xldMii\ReadBar.cs" />
+    <Compile Include="khkh_xldMii\UtSearchf.cs" />
+    <Compile Include="khkh_xldMii\UtXmlGettext.cs" />
+    <Compile Include="khkh_xldMii\WC.cs" />
+    <Compile Include="vcBinTex4\Reform32.cs" />
+    <Compile Include="vcBinTex4\Reform4.cs" />
+    <Compile Include="vcBinTex4\Reform8.cs" />
+    <Compile Include="vconv122\Patc.cs" />
+    <Compile Include="vconv122\STim.cs" />
+    <Compile Include="vconv122\Texex2.cs" />
+    <Compile Include="vconv122\Texfac.cs" />
+    <Compile Include="vconv122\TIMc.cs" />
+    <Compile Include="vconv122\TIMf.cs" />
+    <Compile Include="vwBinTex2\KHcv4pal.cs" />
+    <Compile Include="vwBinTex2\KHcv4pal_v2.cs" />
+    <Compile Include="vwBinTex2\KHcv8pal.cs" />
+    <Compile Include="vwBinTex2\KHcv8pal_swap34.cs" />
+    <Compile Include="vwBinTex2\KHcv8pal_v2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="hex04BinTrack\UC.resources" />
+    <EmbeddedResource Include="khkh_xldMii.Properties\Resources.resources" />
+    <EmbeddedResource Include="khkh_xldMii\BCForm.resources" />
+    <EmbeddedResource Include="khkh_xldMii\FormII.resources" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

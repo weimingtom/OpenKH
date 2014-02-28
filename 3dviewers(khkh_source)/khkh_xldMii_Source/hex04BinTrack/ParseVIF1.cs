@@ -1,10 +1,12 @@
 namespace hex04BinTrack
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
     public class ParseVIF1
     {
+        public List<byte[]> almsmem = new List<byte[]>();
         private VU1Mem vu1;
 
         public ParseVIF1(VU1Mem vu1)
@@ -29,7 +31,7 @@ namespace hex04BinTrack
             {
                 long position = si.Position;
                 uint num = br.ReadUInt32();
-                int num2 = ((int) (num >> 0x18)) & 0x7f;
+                int num2 = ((int)(num >> 0x18)) & 0x7f;
                 switch (num2)
                 {
                     case 0:
@@ -43,61 +45,69 @@ namespace hex04BinTrack
                     case 0x10:
                     case 0x11:
                     case 0x13:
-                    case 20:
                     case 0x15:
-                    case 0x17:
                     case 0x4a:
-                    {
-                        continue;
-                    }
-                    case 0x20:
-                    {
-                        uint num3 = br.ReadUInt32();
-                        for (int i = 0; i < 0x10; i++)
                         {
-                            buffer[i] = (byte) ((num3 >> (2 * i)) & 3);
+                            continue;
                         }
-                        continue;
-                    }
+                    case 20:
+                        {
+                            this.SplitMsmem();
+                            continue;
+                        }
+                    case 0x17:
+                        {
+                            this.SplitMsmem();
+                            continue;
+                        }
+                    case 0x20:
+                        {
+                            uint num3 = br.ReadUInt32();
+                            for (int i = 0; i < 0x10; i++)
+                            {
+                                buffer[i] = (byte)((num3 >> (2 * i)) & 3);
+                            }
+                            continue;
+                        }
                     case 0x30:
-                    {
-                        numArray2[0] = br.ReadUInt32();
-                        numArray2[1] = br.ReadUInt32();
-                        numArray2[2] = br.ReadUInt32();
-                        numArray2[3] = br.ReadUInt32();
-                        continue;
-                    }
+                        {
+                            numArray2[0] = br.ReadUInt32();
+                            numArray2[1] = br.ReadUInt32();
+                            numArray2[2] = br.ReadUInt32();
+                            numArray2[3] = br.ReadUInt32();
+                            continue;
+                        }
                     case 0x31:
-                    {
-                        numArray[0] = br.ReadUInt32();
-                        numArray[1] = br.ReadUInt32();
-                        numArray[2] = br.ReadUInt32();
-                        numArray[3] = br.ReadUInt32();
-                        continue;
-                    }
+                        {
+                            numArray[0] = br.ReadUInt32();
+                            numArray[1] = br.ReadUInt32();
+                            numArray[2] = br.ReadUInt32();
+                            numArray[3] = br.ReadUInt32();
+                            continue;
+                        }
                     case 80:
-                    {
-                        int num5 = ((int) num) & 0xffff;
-                        si.Position = (si.Position + 15L) & -16L;
-                        si.Position += 0x10 * num5;
-                        continue;
-                    }
+                        {
+                            int num5 = ((int)num) & 0xffff;
+                            si.Position = (si.Position + 15L) & -16L;
+                            si.Position += 0x10 * num5;
+                            continue;
+                        }
                     case 0x51:
-                    {
-                        int num6 = ((int) num) & 0xffff;
-                        si.Position = (si.Position + 15L) & -16L;
-                        si.Position += 0x10 * num6;
-                        continue;
-                    }
+                        {
+                            int num6 = ((int)num) & 0xffff;
+                            si.Position = (si.Position + 15L) & -16L;
+                            si.Position += 0x10 * num6;
+                            continue;
+                        }
                 }
                 if (0x60 == (num2 & 0x60))
                 {
                     int num7 = (num2 >> 4) & 1;
                     int num8 = (num2 >> 2) & 3;
                     int vl = num2 & 3;
-                    int num10 = ((int) (num >> 0x10)) & 0xff;
-                    int usn = ((int) (num >> 14)) & 1;
-                    int num12 = ((int) num) & 0x3ff;
+                    int num10 = ((int)(num >> 0x10)) & 0xff;
+                    int usn = ((int)(num >> 14)) & 1;
+                    int num12 = ((int)num) & 0x3ff;
                     int num13 = 0;
                     int num14 = 1;
                     switch (vl)
@@ -151,51 +161,51 @@ namespace hex04BinTrack
                                 switch ((buffer[(j & 3) * 4] & (flag ? 0 : 7)))
                                 {
                                     case 1:
-                                        goto Label_04E7;
+                                        goto Label_04FD;
 
                                     case 2:
-                                        goto Label_04F6;
+                                        goto Label_050C;
 
                                     case 3:
-                                        goto Label_0501;
+                                        goto Label_0517;
                                 }
-                                goto Label_0510;
+                                goto Label_0526;
 
                             case 2:
                                 num18 = reader2.Read();
                                 switch ((buffer[(j & 3) * 4] & (flag ? 0 : 7)))
                                 {
                                     case 0:
-                                        goto Label_05D2;
+                                        goto Label_05E8;
 
                                     case 1:
-                                        goto Label_05DC;
+                                        goto Label_05F2;
 
                                     case 2:
-                                        goto Label_05EB;
+                                        goto Label_0601;
 
                                     case 3:
-                                        goto Label_05F6;
+                                        goto Label_060C;
                                 }
-                                goto Label_0605;
+                                goto Label_061B;
 
                             case 3:
                                 num18 = reader2.Read();
                                 switch ((buffer[(j & 3) * 4] & (flag ? 0 : 7)))
                                 {
                                     case 0:
-                                        goto Label_0722;
+                                        goto Label_0738;
 
                                     case 1:
-                                        goto Label_072C;
+                                        goto Label_0742;
 
                                     case 2:
-                                        goto Label_073B;
+                                        goto Label_0751;
 
                                     case 3:
-                                        goto Label_0746;
+                                        goto Label_075C;
                                 }
-                                goto Label_0755;
+                                goto Label_076B;
 
                             default:
                                 num18 = reader2.Read();
@@ -256,43 +266,43 @@ namespace hex04BinTrack
                                 switch ((buffer[((j & 3) * 4) + 3] & (flag ? 0 : 7)))
                                 {
                                     case 0:
-                                    {
-                                        writer.Write(num18);
-                                        continue;
-                                    }
+                                        {
+                                            writer.Write(num18);
+                                            continue;
+                                        }
                                     case 1:
-                                    {
-                                        writer.Write(numArray2[j & 3]);
-                                        continue;
-                                    }
+                                        {
+                                            writer.Write(numArray2[j & 3]);
+                                            continue;
+                                        }
                                     case 2:
-                                    {
-                                        writer.Write(numArray[3]);
-                                        continue;
-                                    }
+                                        {
+                                            writer.Write(numArray[3]);
+                                            continue;
+                                        }
                                     case 3:
-                                    {
-                                        output.Position += 4L;
-                                        continue;
-                                    }
+                                        {
+                                            output.Position += 4L;
+                                            continue;
+                                        }
                                     default:
-                                    {
-                                        continue;
-                                    }
+                                        {
+                                            continue;
+                                        }
                                 }
                                 break;
                         }
                         writer.Write(num18);
-                        goto Label_0510;
-                    Label_04E7:
+                        goto Label_0526;
+                    Label_04FD:
                         writer.Write(numArray2[j & 3]);
-                        goto Label_0510;
-                    Label_04F6:
+                        goto Label_0526;
+                    Label_050C:
                         writer.Write(numArray[0]);
-                        goto Label_0510;
-                    Label_0501:
+                        goto Label_0526;
+                    Label_0517:
                         output.Position += 4L;
-                    Label_0510:
+                    Label_0526:
                         num18 = reader2.Read();
                         switch ((buffer[((j & 3) * 4) + 1] & (flag ? 0 : 7)))
                         {
@@ -315,18 +325,18 @@ namespace hex04BinTrack
                         output.Position += 4L;
                         output.Position += 4L;
                         continue;
-                    Label_05D2:
+                    Label_05E8:
                         writer.Write(num18);
-                        goto Label_0605;
-                    Label_05DC:
+                        goto Label_061B;
+                    Label_05F2:
                         writer.Write(numArray2[j & 3]);
-                        goto Label_0605;
-                    Label_05EB:
+                        goto Label_061B;
+                    Label_0601:
                         writer.Write(numArray[0]);
-                        goto Label_0605;
-                    Label_05F6:
+                        goto Label_061B;
+                    Label_060C:
                         output.Position += 4L;
-                    Label_0605:
+                    Label_061B:
                         num18 = reader2.Read();
                         switch ((buffer[((j & 3) * 4) + 1] & (flag ? 0 : 7)))
                         {
@@ -367,18 +377,18 @@ namespace hex04BinTrack
                         }
                         output.Position += 4L;
                         continue;
-                    Label_0722:
+                    Label_0738:
                         writer.Write(num18);
-                        goto Label_0755;
-                    Label_072C:
+                        goto Label_076B;
+                    Label_0742:
                         writer.Write(numArray2[j & 3]);
-                        goto Label_0755;
-                    Label_073B:
+                        goto Label_076B;
+                    Label_0751:
                         writer.Write(numArray[0]);
-                        goto Label_0755;
-                    Label_0746:
+                        goto Label_076B;
+                    Label_075C:
                         output.Position += 4L;
-                    Label_0755:
+                    Label_076B:
                         num18 = reader2.Read();
                         switch ((buffer[((j & 3) * 4) + 1] & (flag ? 0 : 7)))
                         {
@@ -421,30 +431,30 @@ namespace hex04BinTrack
                         switch ((buffer[((j & 3) * 4) + 3] & (flag ? 0 : 7)))
                         {
                             case 0:
-                            {
                                 writer.Write(num18);
-                                continue;
-                            }
+                                break;
+
                             case 1:
-                            {
                                 writer.Write(numArray2[j & 3]);
-                                continue;
-                            }
+                                break;
+
                             case 2:
-                            {
                                 writer.Write(numArray[3]);
-                                continue;
-                            }
+                                break;
+
                             case 3:
-                            {
                                 output.Position += 4L;
-                                continue;
-                            }
+                                break;
                         }
                     }
                     si.Position = num16;
                 }
             }
+        }
+
+        private void SplitMsmem()
+        {
+            this.almsmem.Add((byte[])this.vu1.vumem.Clone());
         }
 
         private class Reader
@@ -470,14 +480,14 @@ namespace hex04BinTrack
                     case 1:
                         if (!this.usn)
                         {
-                            return (uint) this.br.ReadInt16();
+                            return (uint)this.br.ReadInt16();
                         }
                         return this.br.ReadUInt16();
 
                     case 2:
                         if (!this.usn)
                         {
-                            return (uint) this.br.ReadSByte();
+                            return (uint)this.br.ReadSByte();
                         }
                         return this.br.ReadByte();
                 }

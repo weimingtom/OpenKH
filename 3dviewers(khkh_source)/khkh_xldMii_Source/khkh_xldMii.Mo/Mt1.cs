@@ -1,21 +1,18 @@
+using System;
 namespace khkh_xldMii.Mo
 {
-    using System;
-
-    public class Mt1
-    {
-        public byte[] bin;
-        public FacMod fm;
-        public string id;
-        public bool isRaw;
-        public int k1;
-        public uint len;
-        public uint off;
-
-        public override string ToString()
-        {
-            return this.id;
-        }
-    }
+	public class Mt1
+	{
+		public uint off;
+		public uint len;
+		public string id;
+		public byte[] bin;
+		public int k1;
+		public FacMod fm;
+		public bool isRaw;
+		public override string ToString()
+		{
+			return this.id;
+		}
+	}
 }
-

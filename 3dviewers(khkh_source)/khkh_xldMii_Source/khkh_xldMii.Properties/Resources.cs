@@ -1,74 +1,69 @@
+using System;
+using System.CodeDom.Compiler;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.Resources;
+using System.Runtime.CompilerServices;
 namespace khkh_xldMii.Properties
 {
-    using System;
-    using System.CodeDom.Compiler;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Globalization;
-    using System.Resources;
-    using System.Runtime.CompilerServices;
-
-    [DebuggerNonUserCode, GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0"), CompilerGenerated]
-    internal class Resources
-    {
-        private static CultureInfo resourceCulture;
-        private static System.Resources.ResourceManager resourceMan;
-
-        internal Resources()
-        {
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        internal static CultureInfo Culture
-        {
-            get
-            {
-                return resourceCulture;
-            }
-            set
-            {
-                resourceCulture = value;
-            }
-        }
-
-        internal static Bitmap DFH
-        {
-            get
-            {
-                return (Bitmap) ResourceManager.GetObject("DFH", resourceCulture);
-            }
-        }
-
-        internal static Bitmap Happy
-        {
-            get
-            {
-                return (Bitmap) ResourceManager.GetObject("Happy", resourceCulture);
-            }
-        }
-
-        internal static Bitmap NG
-        {
-            get
-            {
-                return (Bitmap) ResourceManager.GetObject("NG", resourceCulture);
-            }
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        internal static System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
-                    System.Resources.ResourceManager manager = new System.Resources.ResourceManager("khkh_xldMii.Properties.Resources", typeof(Resources).Assembly);
-                    resourceMan = manager;
-                }
-                return resourceMan;
-            }
-        }
-    }
+	[GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0"), DebuggerNonUserCode, CompilerGenerated]
+	internal class Resources
+	{
+		private static ResourceManager resourceMan;
+		private static CultureInfo resourceCulture;
+		[EditorBrowsable(EditorBrowsableState.Advanced)]
+		internal static ResourceManager ResourceManager
+		{
+			get
+			{
+				if (object.ReferenceEquals(Resources.resourceMan, null))
+				{
+					ResourceManager resourceManager = new ResourceManager("khkh_xldMii.Properties.Resources", typeof(Resources).Assembly);
+					Resources.resourceMan = resourceManager;
+				}
+				return Resources.resourceMan;
+			}
+		}
+		[EditorBrowsable(EditorBrowsableState.Advanced)]
+		internal static CultureInfo Culture
+		{
+			get
+			{
+				return Resources.resourceCulture;
+			}
+			set
+			{
+				Resources.resourceCulture = value;
+			}
+		}
+		internal static Bitmap DFH
+		{
+			get
+			{
+				object @object = Resources.ResourceManager.GetObject("DFH", Resources.resourceCulture);
+				return (Bitmap)@object;
+			}
+		}
+		internal static Bitmap Happy
+		{
+			get
+			{
+				object @object = Resources.ResourceManager.GetObject("Happy", Resources.resourceCulture);
+				return (Bitmap)@object;
+			}
+		}
+		internal static Bitmap NG
+		{
+			get
+			{
+				object @object = Resources.ResourceManager.GetObject("NG", Resources.resourceCulture);
+				return (Bitmap)@object;
+			}
+		}
+		internal Resources()
+		{
+		}
+	}
 }
-

@@ -1,4 +1,4 @@
 khkh_xldMii source
 ======
-A source full of mistake but written in c#.
-Able to load animations and 3d characters
+The source of the software khkh_xldMii, finally cleared of all his mistakes \o/
+Revision 13
