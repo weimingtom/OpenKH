@@ -44,8 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI.cs" />
+    <Compile Include="AI2.cs" />
     <Compile Include="Bar.cs" />
+    <Compile Include="IMGD_Z.cs" />
     <Compile Include="IDX1.cs" />
     <Compile Include="IDX2.cs" />
     <Compile Include="Img.cs" />

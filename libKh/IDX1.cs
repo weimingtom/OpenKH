@@ -1,69 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 
 namespace Kh
 {
     /// <summary>
-    /// Process IDX of Kingdom Hearts 1
+    ///     Process IDX of Kingdom Hearts 1
     /// </summary>
     public class IDX1
     {
-        /// <summary>
-        /// Readable and x86 aligned structure from IDX
-        /// </summary>
-        struct FileIdx
-        {
-            /// <summary>
-            /// 32-bit hash of filename
-            /// Use CalculateHash to get it
-            /// </summary>
-            public int hash;
-            /// <summary>
-            /// flags that describes how the entry is managed
-            /// </summary>
-            public long flags;
-            /// <summary>
-            /// Real position of file inside the IMG, 2048 bytes aligned
-            /// </summary>
-            public long position;
-            /// <summary>
-            /// Length of uncompressed file
-            /// </summary>
-            public long length;
-        }
+        private readonly FileIdx[] idx;
+        private readonly Stream streamImg;
+        private int filesCount;
 
         /// <summary>
-        /// Calculate a 32-bit has from a string.
-        /// </summary>
-        /// <param name="str">filename</param>
-        /// <returns>32-bit hash</returns>
-        public static int CalculateHash(string str)
-        {
-            int hash = 0;
-            for (int i = 0, ch; i < str.Length; i++)
-            {
-                ch = str[i];
-                hash = (2 * hash) ^ ((ch << 16) % 69665);
-            }
-            return hash;
-        }
-
-        Stream streamImg;
-        int filesCount;
-        FileIdx[] idx;
-
-        /// <summary>
-        /// Parse an IDX file
+        ///     Parse an IDX file
         /// </summary>
         /// <param name="streamIdx">stream that contains IDX data</param>
         /// <param name="streamImg">stream that contains ISO data</param>
-        public IDX1(System.IO.Stream streamIdx, System.IO.Stream streamImg)
+        public IDX1(Stream streamIdx, Stream streamImg)
         {
-            BinaryReader reader = new BinaryReader(streamIdx);
+            var reader = new BinaryReader(streamIdx);
 
             // First 4 bytes are the entries count
-            filesCount = (int)streamIdx.Length / 0x10;
+            filesCount = (int) streamIdx.Length/0x10;
             idx = new FileIdx[filesCount];
 
             // Parse IDX file
@@ -80,7 +38,23 @@ namespace Kh
         }
 
         /// <summary>
-        /// Get stream from the specified filename
+        ///     Calculate a 32-bit has from a string.
+        /// </summary>
+        /// <param name="str">filename</param>
+        /// <returns>32-bit hash</returns>
+        public static int CalculateHash(string str)
+        {
+            int hash = 0;
+            for (int i = 0, ch; i < str.Length; i++)
+            {
+                ch = str[i];
+                hash = (2*hash) ^ ((ch << 16)%69665);
+            }
+            return hash;
+        }
+
+        /// <summary>
+        ///     Get stream from the specified filename
         /// </summary>
         /// <param name="filename">filename</param>
         /// <returns></returns>
@@ -95,19 +69,16 @@ namespace Kh
                 {
                     return Uncompress(streamImg, idx[index].position, -1, idx[index].length);
                 }
-                else
-                {
-                    byte[] data = new byte[idx[index].length];
-                    streamImg.Position = idx[index].position;
-                    streamImg.Read(data, 0, data.Length);
-                    return new MemoryStream(data);
-                }
+                var data = new byte[idx[index].length];
+                streamImg.Position = idx[index].position;
+                streamImg.Read(data, 0, data.Length);
+                return new MemoryStream(data);
             }
-            throw new System.IO.FileNotFoundException();
+            throw new FileNotFoundException();
         }
 
         /// <summary>
-        /// Check if the specified file exists
+        ///     Check if the specified file exists
         /// </summary>
         /// <param name="filename">filename</param>
         /// <returns></returns>
@@ -120,12 +91,12 @@ namespace Kh
 
         private Stream Uncompress(Stream streamIn, long offset, long srcSize, long dstSize)
         {
-            byte[] dstData = new byte[dstSize];
+            var dstData = new byte[dstSize];
 
             // srcSize needs to be 2048 bytes aligned in order to work
             if ((srcSize & 0x7FF) == 0)
             {
-                byte[] srcData = new byte[srcSize];
+                var srcData = new byte[srcSize];
                 streamIn.Position = offset + srcSize - srcData.Length;
                 streamIn.Read(srcData, 0, srcData.Length);
 
@@ -179,7 +150,7 @@ namespace Kh
         }
 
         /// <summary>
-        /// Search the hashes inside the IDX structure
+        ///     Search the hashes inside the IDX structure
         /// </summary>
         /// <param name="hash">32-bit hash to search</param>
         /// <returns>IDX index that contains the file description</returns>
@@ -204,6 +175,33 @@ namespace Kh
                     return center;
             }
             return -1;
+        }
+
+        /// <summary>
+        ///     Readable and x86 aligned structure from IDX
+        /// </summary>
+        private struct FileIdx
+        {
+            /// <summary>
+            ///     flags that describes how the entry is managed
+            /// </summary>
+            public long flags;
+
+            /// <summary>
+            ///     32-bit hash of filename
+            ///     Use CalculateHash to get it
+            /// </summary>
+            public int hash;
+
+            /// <summary>
+            ///     Length of uncompressed file
+            /// </summary>
+            public long length;
+
+            /// <summary>
+            ///     Real position of file inside the IMG, 2048 bytes aligned
+            /// </summary>
+            public long position;
         }
     }
 }

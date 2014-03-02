@@ -1,65 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 
 namespace Kh
 {
     /// <summary>
-    /// Process IDX of Kingdom Hearts 2
+    ///     Process IDX of Kingdom Hearts 2
     /// </summary>
     public class IDX2
     {
+        private readonly int filesCount;
+        private readonly FileIdx[] idx;
+        private readonly Stream streamImg;
+
         /// <summary>
-        /// Readable and x86 aligned structure from IDX
+        ///     Parse an IDX file
         /// </summary>
-        struct FileIdx
+        /// <param name="streamIdx">stream that contains IDX data</param>
+        /// <param name="streamImg">stream that contains IMG data</param>
+        public IDX2(Stream streamIdx, Stream streamImg)
         {
-            /// <summary>
-            /// 32-bit hash of filename
-            /// Use CalculateHash32 to get it
-            /// </summary>
-            public int hash32;
-            /// <summary>
-            /// 16-bit hash of filename
-            /// Use CalculateHash16 to get it
-            /// </summary>
-            public int hash16;
-            /// <summary>
-            /// Real position of file inside the IMG, 2048 bytes aligned
-            /// </summary>
-            public long position;
-            /// <summary>
-            /// Length of uncompressed file
-            /// </summary>
-            public long length;
-            /// <summary>
-            /// Length of file inside the IMG, 2048 bytes aligned
-            /// </summary>
-            public long clength;
-            /// <summary>
-            /// Flag that explains if the current file is compressed
-            /// </summary>
-            public bool compressed;
-            /// <summary>
-            /// Flag that explains if the current file is able to stream data
-            /// </summary>
-            public bool streamed;
+            var reader = new BinaryReader(streamIdx);
+
+            // First 4 bytes are the entries count
+            filesCount = reader.ReadInt32();
+            idx = new FileIdx[filesCount];
+
+            // Parse IDX file
+            for (int i = 0; i < filesCount; i++)
+            {
+                idx[i].hash32 = reader.ReadInt32();
+                idx[i].hash16 = reader.ReadInt16();
+                idx[i].clength = reader.ReadInt16();
+                idx[i].position = reader.ReadInt32();
+                idx[i].length = reader.ReadInt32();
+
+                idx[i].compressed = (idx[i].clength & 0x4000) != 0;
+                idx[i].streamed = (idx[i].clength & 0x8000) != 0;
+                idx[i].clength = (idx[i].clength & 0x3FFF)*0x800 + 0x800;
+                idx[i].position *= 0x800;
+            }
+
+            // Get the stream of IMG
+            this.streamImg = streamImg;
         }
 
         /// <summary>
-        /// Calculate a 32-bit has from a string.
-        /// SLPM_66675.ELF: where this code was extracted? I forgot it lol
+        ///     Calculate a 32-bit has from a string.
+        ///     SLPM_66675.ELF: where this code was extracted? I forgot it lol
         /// </summary>
         /// <param name="str">filename</param>
         /// <returns>32-bit hash</returns>
-        static int CalculateHash32(string str)
+        private static int CalculateHash32(string str)
         {
             int c = -1;
 
             int strIndex = 0;
             do
             {
-                c ^= (int)str[strIndex] << 24;
+                c ^= str[strIndex] << 24;
                 for (int i = 8; i > 0; i--)
                 {
                     if (c < 0)
@@ -74,12 +71,12 @@ namespace Kh
         }
 
         /// <summary>
-        /// Calculate a 32-bit has from a string.
-        /// SLPM_66675.ELF: where this code was extracted? This was discovered from Crazycat
+        ///     Calculate a 32-bit has from a string.
+        ///     SLPM_66675.ELF: where this code was extracted? This was discovered from Crazycat
         /// </summary>
         /// <param name="str">filename</param>
         /// <returns>32-bit hash</returns>
-        static int CalculateHash16(string str)
+        private static int CalculateHash16(string str)
         {
             int s1 = -1;
             int length = str.Length;
@@ -101,44 +98,8 @@ namespace Kh
             return (~s1) & 0xFFFF;
         }
 
-        Stream streamImg;
-        int filesCount;
-        FileIdx[] idx;
-
         /// <summary>
-        /// Parse an IDX file
-        /// </summary>
-        /// <param name="streamIdx">stream that contains IDX data</param>
-        /// <param name="streamImg">stream that contains IMG data</param>
-        public IDX2(System.IO.Stream streamIdx, System.IO.Stream streamImg)
-        {
-            BinaryReader reader = new BinaryReader(streamIdx);
-
-            // First 4 bytes are the entries count
-            filesCount = reader.ReadInt32();
-            idx = new FileIdx[filesCount];
-
-            // Parse IDX file
-            for (int i = 0; i < filesCount; i++)
-            {
-                idx[i].hash32 = reader.ReadInt32();
-                idx[i].hash16 = reader.ReadInt16();
-                idx[i].clength = reader.ReadInt16();
-                idx[i].position = reader.ReadInt32();
-                idx[i].length = reader.ReadInt32();
-
-                idx[i].compressed = (idx[i].clength & 0x4000) != 0;
-                idx[i].streamed = (idx[i].clength & 0x8000) != 0;
-                idx[i].clength = (idx[i].clength & 0x3FFF) * 0x800 + 0x800;
-                idx[i].position *= 0x800;
-            }
-
-            // Get the stream of IMG
-            this.streamImg = streamImg;
-        }
-
-        /// <summary>
-        /// Get stream from the specified filename
+        ///     Get stream from the specified filename
         /// </summary>
         /// <param name="filename">filename</param>
         /// <returns></returns>
@@ -150,24 +111,21 @@ namespace Kh
 
             if (index >= 0)
             {
-                if (idx[index].compressed == true)
+                if (idx[index].compressed)
                 {
                     return Uncompress(streamImg, idx[index].position,
                         idx[index].clength, idx[index].length);
                 }
-                else
-                {
-                    byte[] data = new byte[idx[index].length];
-                    streamImg.Position = idx[index].position;
-                    streamImg.Read(data, 0, data.Length);
-                    return new MemoryStream(data);
-                }
+                var data = new byte[idx[index].length];
+                streamImg.Position = idx[index].position;
+                streamImg.Read(data, 0, data.Length);
+                return new MemoryStream(data);
             }
-            throw new System.IO.FileNotFoundException();
+            throw new FileNotFoundException();
         }
-        
+
         /// <summary>
-        /// Check if the specified file exists
+        ///     Check if the specified file exists
         /// </summary>
         /// <param name="filename">filename</param>
         /// <returns></returns>
@@ -181,12 +139,12 @@ namespace Kh
 
         private Stream Uncompress(Stream streamIn, long offset, long srcSize, long dstSize)
         {
-            byte[] dstData = new byte[dstSize];
+            var dstData = new byte[dstSize];
 
             // srcSize needs to be 2048 bytes aligned in order to work
             if ((srcSize & 0x7FF) == 0)
             {
-                byte[] srcData = new byte[srcSize];
+                var srcData = new byte[srcSize];
                 streamIn.Position = offset + srcSize - srcData.Length;
                 streamIn.Read(srcData, 0, srcData.Length);
 
@@ -240,7 +198,7 @@ namespace Kh
         }
 
         /// <summary>
-        /// Search the hashes inside the IDX structure
+        ///     Search the hashes inside the IDX structure
         /// </summary>
         /// <param name="hash32">32-bit hash to search</param>
         /// <param name="hash16">16-bit hash to search</param>
@@ -254,6 +212,49 @@ namespace Kh
                     return i;
             }
             return -1;
+        }
+
+        /// <summary>
+        ///     Readable and x86 aligned structure from IDX
+        /// </summary>
+        private struct FileIdx
+        {
+            /// <summary>
+            ///     Length of file inside the IMG, 2048 bytes aligned
+            /// </summary>
+            public long clength;
+
+            /// <summary>
+            ///     Flag that explains if the current file is compressed
+            /// </summary>
+            public bool compressed;
+
+            /// <summary>
+            ///     16-bit hash of filename
+            ///     Use CalculateHash16 to get it
+            /// </summary>
+            public int hash16;
+
+            /// <summary>
+            ///     32-bit hash of filename
+            ///     Use CalculateHash32 to get it
+            /// </summary>
+            public int hash32;
+
+            /// <summary>
+            ///     Length of uncompressed file
+            /// </summary>
+            public long length;
+
+            /// <summary>
+            ///     Real position of file inside the IMG, 2048 bytes aligned
+            /// </summary>
+            public long position;
+
+            /// <summary>
+            ///     Flag that explains if the current file is able to stream data
+            /// </summary>
+            public bool streamed;
         }
     }
 }

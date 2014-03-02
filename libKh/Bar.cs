@@ -1,32 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Kh
 {
     public class Bar
     {
-        const int MagicCode = 0x01524142;
-
-        struct Header
-        {
-            public int magic;
-            public int count;
-            public int dunno1;
-            public int dunno2;
-        }
-        struct Entry
-        {
-            public int type;
-            public int name;
-            public int position;
-            public int size;
-        }
-
         /// <summary>
-        /// Type of files
-        /// TODO INCOMPLETE LIST
-        /// Thanks to GovanifY for this
+        ///     Type of files
+        ///     TODO INCOMPLETE LIST
+        ///     Thanks to GovanifY for this
         /// </summary>
         public enum Type
         {
@@ -52,7 +34,7 @@ namespace Kh
             SEQD = 0x19,
             LAYERD = 0x1C,
             IMGZ = 0x1D,
-            BAR_4  = 0x1E,
+            BAR_4 = 0x1E,
             SEB = 0x1F,
             WD = 0x20,
             VSB = 0x22,
@@ -60,16 +42,17 @@ namespace Kh
             BAR_5 = 0x2E,
             VIBD = 0x2F,
             VAG = 0x30
+        }
 
-        } 
+        private const int MagicCode = 0x01524142;
 
-        Header header;
-        Entry[] entries;
-        Stream stream;
+        private readonly Entry[] entries;
+        private readonly Stream stream;
+        private Header header;
 
         public Bar(Stream stream)
         {
-            byte[] data = new byte[0x10];
+            var data = new byte[0x10];
             stream.Read(data, 0, data.Length);
 
             header.magic = Data.ByteToInt(data, 0, 4);
@@ -78,7 +61,7 @@ namespace Kh
             header.dunno2 = Data.ByteToInt(data, 12, 4);
 
             if (header.magic != MagicCode)
-                throw new System.IO.InvalidDataException();
+                throw new InvalidDataException();
 
             if (header.count != 0)
             {
@@ -96,34 +79,36 @@ namespace Kh
         }
 
         /// <summary>
-        /// Number of files inside BAR
+        ///     Number of files inside BAR
         /// </summary>
         public int Count
-        { get { return header.count; } }
+        {
+            get { return header.count; }
+        }
 
         /// <summary>
-        /// Check file type of specified file index inside BAR
+        ///     Check file type of specified file index inside BAR
         /// </summary>
         /// <param name="index">index of file; from 0 to Count</param>
         /// <returns>File type</returns>
         public Type GetType(int index)
         {
-            return (Type)entries[index].type;
+            return (Type) entries[index].type;
         }
 
         /// <summary>
-        /// Check file name of specified file index inside BAR
+        ///     Check file name of specified file index inside BAR
         /// </summary>
         /// <param name="index">index of file; from 0 to Count</param>
         /// <returns>File name</returns>
         public string GetName(int index)
         {
-            char[] ch = new char[4];
+            var ch = new char[4];
             int nName = entries[index].name;
             int strLength = 0;
             for (strLength = 0; strLength < ch.Length; strLength++)
             {
-                ch[strLength] = (char)((nName >> (strLength * 8)) & 0xFF);
+                ch[strLength] = (char) ((nName >> (strLength*8)) & 0xFF);
                 if (ch[strLength] == '\0')
                     break;
             }
@@ -131,16 +116,32 @@ namespace Kh
         }
 
         /// <summary>
-        /// Get data from specified file index inside BAR
+        ///     Get data from specified file index inside BAR
         /// </summary>
         /// <param name="index">index of file; from 0 to Count</param>
         /// <returns>stream data from specified file</returns>
         public Stream GetData(int index)
         {
-            byte[] data = new byte[entries[index].size];
+            var data = new byte[entries[index].size];
             stream.Position = entries[index].position;
             stream.Read(data, 0, data.Length);
             return new MemoryStream(data);
+        }
+
+        private struct Entry
+        {
+            public int name;
+            public int position;
+            public int size;
+            public int type;
+        }
+
+        private struct Header
+        {
+            public int count;
+            public int dunno1;
+            public int dunno2;
+            public int magic;
         }
     }
 }

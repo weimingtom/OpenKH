@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace Kh
 {
     public class Msg
     {
-        Dictionary<int, int> msgDictionary;
-        Stream stream;
+        private readonly Dictionary<int, int> msgDictionary;
+        private Stream stream;
 
         /// <summary>
-        /// Create a message object that contains strings
+        ///     Create a message object that contains strings
         /// </summary>
         public Msg()
         {
@@ -18,12 +17,12 @@ namespace Kh
         }
 
         /// <summary>
-        /// Add a message stream
+        ///     Add a message stream
         /// </summary>
         /// <param name="stream">stream to check and add to current file</param>
         public void Add(Stream stream)
         {
-            BinaryReader reader = new BinaryReader(stream);
+            var reader = new BinaryReader(stream);
 
             int unknown = reader.ReadInt32();
             int msgcount = reader.ReadInt32();
@@ -38,7 +37,7 @@ namespace Kh
         }
 
         /// <summary>
-        /// Get a message's stream from its id
+        ///     Get a message's stream from its id
         /// </summary>
         /// <param name="id">id of message to get</param>
         /// <returns>message</returns>
