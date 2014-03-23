@@ -1,8 +1,7 @@
-using System;
 namespace khkh_xldMii
 {
-	public interface IVwer
-	{
-		void BackToViewer();
-	}
+    public interface IVwer
+    {
+        void BackToViewer();
+    }
 }

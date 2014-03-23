@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace BARParser
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
+
             Kh.IDX2 idx = new Kh.IDX2(
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IDX", FileMode.Open, FileAccess.Read),
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IMG", FileMode.Open, FileAccess.Read));
@@ -16,7 +19,18 @@ namespace BARParser
 
             Stream file = idx.OpenFile(@"msg/jp/sys.bar");
             Console.WriteLine("File size: " + file.Length.ToString());
-
+#if TEST
+            msg.Add(file);
+            Random rnd = new Random();
+            int int5 = 32768;
+            Stream test = msg.Get(int);
+            Int32 length = unchecked((int)test.Length);
+            Byte[] buffer = new Byte[length];
+            test.Read(buffer, 0, length);
+            byte[] a = buffer;
+            Console.Write("Random string: {0}", a);
+            Console.Read();
+#endif
             Kh.Bar msgSys = new Kh.Bar(file);
             Console.WriteLine("BAR files: " + msgSys.Count);
             for (int i = 0; i < msgSys.Count; i++)
@@ -38,7 +52,9 @@ namespace BARParser
                     msg.Add(stream);
                 }
             }
+
             Console.ReadLine();
+
         }
     }
 }
