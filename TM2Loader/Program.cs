@@ -9,7 +9,7 @@ namespace TM2Loader
     static class Program
     {
         /// <summary>
-        /// Punto di ingresso principale dell'applicazione.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()

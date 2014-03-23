@@ -12,7 +12,7 @@ namespace KH1_ImgParser
 {
     public partial class fMain : Form
     {
-        Kh.Img img;
+        LIBKH.KH1.IMG img;
 
         public fMain()
         {
@@ -25,7 +25,7 @@ namespace KH1_ImgParser
             openFileDialog.Filter = "Kingdom Hearts 1 IMG files|*.img";
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                img = new Kh.Img(openFileDialog.FileName);
+                img = new LIBKH.KH1.IMG(openFileDialog.FileName);
                 vScrollBarImage.Value = 0;
                 vScrollBarImage.Maximum = img.Count - 1;
                 SelectImgIndex(0);
@@ -49,7 +49,7 @@ namespace KH1_ImgParser
 
         void SelectImgIndex(int index)
         {
-            panelImage.BackgroundImage = new Kh.TM2(img.Get(index)).Image;
+            panelImage.BackgroundImage = new LIBKH.ALL.TM2(img.Get(index)).Image;
         }
     }
 }

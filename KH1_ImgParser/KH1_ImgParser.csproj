@@ -78,9 +78,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libKh\Kh.csproj">
+    <ProjectReference Include="..\libKh\LIBKH.csproj">
       <Project>{605c4d6b-6e02-4bf3-8a91-db2ddb3acd8a}</Project>
-      <Name>Kh</Name>
+      <Name>LIBKH</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

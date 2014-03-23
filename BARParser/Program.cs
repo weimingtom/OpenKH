@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using LIBKH;
 
 namespace BARParser
 {
@@ -11,11 +12,11 @@ namespace BARParser
         static void Main(string[] args)
         {
 
-            Kh.IDX2 idx = new Kh.IDX2(
+            LIBKH.KH2.IDX idx = new LIBKH.KH2.IDX(
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IDX", FileMode.Open, FileAccess.Read),
                 new FileStream(@"D:\Hacking\OpenKH\KH2.IMG", FileMode.Open, FileAccess.Read));
 
-            Kh.Msg msg = new Kh.Msg();
+            LIBKH.KH2.MSG msg = new LIBKH.KH2.MSG();
 
             Stream file = idx.OpenFile(@"msg/jp/sys.bar");
             Console.WriteLine("File size: " + file.Length.ToString());
@@ -31,7 +32,7 @@ namespace BARParser
             Console.Write("Random string: {0}", a);
             Console.Read();
 #endif
-            Kh.Bar msgSys = new Kh.Bar(file);
+            LIBKH.KH2.BAR msgSys = new LIBKH.KH2.BAR(file);
             Console.WriteLine("BAR files: " + msgSys.Count);
             for (int i = 0; i < msgSys.Count; i++)
             {
@@ -47,7 +48,7 @@ namespace BARParser
                 fDump.Close();
                 stream.Position = 0;
 
-                if (msgSys.GetType(i) == Kh.Bar.Type.MSG)
+                if (msgSys.GetType(i) == LIBKH.KH2.BAR.Type.MSG)
                 {
                     msg.Add(stream);
                 }

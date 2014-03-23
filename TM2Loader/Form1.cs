@@ -23,7 +23,7 @@ namespace TM2Loader
             openFileDialog.Filter = "TIM2 files|*.tm2";
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Kh.TM2 tm2 = new Kh.TM2(openFileDialog.FileName);
+                LIBKH.ALL.TM2 tm2 = new LIBKH.ALL.TM2(openFileDialog.FileName);
                 panelImage.BackgroundImage = tm2.Image;
             }
         }
