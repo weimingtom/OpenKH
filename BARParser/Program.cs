@@ -23,7 +23,7 @@ namespace BARParser
             msg.Add(file);
             Random rnd = new Random();
             int int5 = 32768;
-            Stream test = msg.Get(int);
+            Stream test = msg.Get(int5);
             Int32 length = unchecked((int)test.Length);
             Byte[] buffer = new Byte[length];
             test.Read(buffer, 0, length);
