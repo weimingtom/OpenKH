@@ -114,7 +114,7 @@ class BinaryWriter2 extends BinaryWriter {
 	public function WriteBytes(i:byte[]):void{super.Write(i);}
 	public function WriteDummy(i):void{if(i===0){return;}WriteDelta(i);WriteBytes([0xFF,0x06,0]);}
 }
-function main(){
+function main(track){
 	var argv=Environment.GetCommandLineArgs(),argc=argv.Length,nme;
 	if(argc>1){
 		Console.WriteLine('Using BGM File: {0}',nme=argv[1]);
