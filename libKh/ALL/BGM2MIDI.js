@@ -11,7 +11,7 @@ ushort	Parts Per Quarter Note
 uint	File-size
 byte*12	Padding
 for each track:
-    uint Track size
+	uint Track size
 	byte*? Track commands
 
 Commands:
@@ -47,7 +47,7 @@ Commands:
 		byte:	Key
 	20:	Program change
 		byte: new program
-	()22:	Volume
+	22:	Volume
 		byte
 	24:	Expression
 		byte
@@ -86,21 +86,21 @@ Commands:
 	5D:	Portamento?
 		byte
 */
-using System;
-using System.IO;
+import System;
+import System.IO;
 
-public void echo(Object e){if(typeof e!=="string"){e=""+e;}Console.WriteLine(e);}
-public class BinaryWriter2 extends BinaryWriter {
-	public BinaryWriter2(System.IO.Stream stream){super(stream);}
-	public void Write(Int32 i){byte[] b=BitConverter.GetBytes(i).reverse();super.Write(b,0,4);}
-	public void Write(UInt32 i){byte[] b=BitConverter.GetBytes(i).reverse();super.Write(b,0,4);}
-	public void Write(Int16 i){byte[] b=BitConverter.GetBytes(i).reverse();super.Write(b,0,2);}
-	public void Write(UInt16 i){byte[] b=BitConverter.GetBytes(i).reverse();super.Write(b,0,2);}
-	public void Write(Int64 i){byte[] b=BitConverter.GetBytes(i).reverse();super.Write(b,0,8);}
-	public void Write(UInt64 i){byte[] b=BitConverter.GetBytes(i).reverse();super.Write(b,0,8);}
-	public void WriteDelta(Object i){
-		if(i>0xFFFFFFF){throw Error("Too large of time!");}
-		UInt32 b=i&0x7F;
+function echo(e){if(typeof e!=='string'){e=''+e;}Console.WriteLine(e);}
+class BinaryWriter2 extends BinaryWriter {
+	public function BinaryWriter2(stream:System.IO.Stream){super(stream);}
+	public function Write(i:Int32):void{var b:byte[]=BitConverter.GetBytes(i).reverse();super.Write(b,0,4);}
+	public function Write(i:UInt32):void{var b:byte[]=BitConverter.GetBytes(i).reverse();super.Write(b,0,4);}
+	public function Write(i:Int16):void{var b:byte[]=BitConverter.GetBytes(i).reverse();super.Write(b,0,2);}
+	public function Write(i:UInt16):void{var b:byte[]=BitConverter.GetBytes(i).reverse();super.Write(b,0,2);}
+	public function Write(i:Int64):void{var b:byte[]=BitConverter.GetBytes(i).reverse();super.Write(b,0,8);}
+	public function Write(i:UInt64):void{var b:byte[]=BitConverter.GetBytes(i).reverse();super.Write(b,0,8);}
+	public function WriteDelta(i):void{
+		if(i>0xFFFFFFF){throw Error('Too large of time!');}
+		var b:UInt32=i&0x7F;
 		while((i>>=7)){
 			b<<=8;
 			b|=((i&0x7F)|0x80);
@@ -111,35 +111,35 @@ public class BinaryWriter2 extends BinaryWriter {
 			b>>=8;
 		}while(true);
 	}
-	public void WriteBytes(byte[] i){super.Write(i);}
-	public void WriteDummy(Object i){if(i===0){return;}WriteDelta(i);WriteBytes([0xFF,0x06,0]);}
+	public function WriteBytes(i:byte[]):void{super.Write(i);}
+	public function WriteDummy(i):void{if(i===0){return;}WriteDelta(i);WriteBytes([0xFF,0x06,0]);}
 }
-public void main(){
-	argv=Environment.GetCommandLineArgs(),argc=argv.Length,nme;
+function main(){
+	var argv=Environment.GetCommandLineArgs(),argc=argv.Length,nme;
 	if(argc>1){
-		Console.WriteLine("Using BGM File: {0}",nme=argv[1]);
+		Console.WriteLine('Using BGM File: {0}',nme=argv[1]);
 	}else{
-		Console.Write("Enger BGM File: ");
+		Console.Write('Enter BGM File: ');
 		nme=Console.ReadLine();
 	}
-	FileStream bgmS=File.Open(nme,FileMode.Open,FileAccess.Read);
-		BinaryReader bgm=new BinaryReader(bgmS);
-		FileStream midS=File.Open(nme+".mid",FileMode.Create,FileAccess.Write);
-		BinaryWriter2 mid=new BinaryWriter2(midS);
-		trackC:byte,ppqn:UInt16;
-		byte lKey=0,byte lVelocity=64;
-		byte track=0,tSzT:UInt32,delta,cmd:byte,t,trackLenOffset;
-		/*program2channel={},byte channelL=0,*/byte channel=0;
+	var bgmS:FileStream=File.Open(nme,FileMode.Open,FileAccess.Read),
+		bgm:BinaryReader=new BinaryReader(bgmS),
+		midS:FileStream=File.Open(nme+'.mid',FileMode.Create,FileAccess.Write),
+		mid:BinaryWriter2=new BinaryWriter2(midS),
+		trackC:byte,ppqn:UInt16,
+		lKey:byte=0,lVelocity:byte=64,
+		track:byte=0,tSzT:UInt32,delta,cmd:byte,t,trackLenOffset,
+		/*program2channel={},channelL:byte=0,*/channel:byte=0;
 	try{
 		if(bgm.ReadUInt32()!==0x204D4742){Console.WriteLine("BAD HEADER!");return;}
-		Console.WriteLine("Seq ID:         {0}",bgm.ReadUInt16());
-		Console.WriteLine("WD  ID:         {0}",bgm.ReadUInt16());
-		Console.WriteLine("# of Tracks:    {0}",trackC=bgm.ReadByte());
-		Console.WriteLine("Unknown:        {0}",bgm.ReadBytes(3).toString());
-		Console.WriteLine("In-game volume: {0}",bgm.ReadByte());
-		Console.WriteLine("Unknown2:       {0:x2}",bgm.ReadByte());
-		Console.WriteLine("PPQN:           {0}",ppqn=bgm.ReadUInt16());
-		Console.WriteLine("File-Size:      {0}",bgm.ReadUInt32());
+		Console.WriteLine('Seq ID:         {0}',bgm.ReadUInt16());
+		Console.WriteLine('WD  ID:         {0}',bgm.ReadUInt16());
+		Console.WriteLine('# of Tracks:    {0}',trackC=bgm.ReadByte());
+		Console.WriteLine('Unknown:        {0}',bgm.ReadBytes(3).toString());
+		Console.WriteLine('In-game volume: {0}',bgm.ReadByte());
+		Console.WriteLine('Unknown2:       {0:x2}',bgm.ReadByte());
+		Console.WriteLine('PPQN:           {0}',ppqn=bgm.ReadUInt16());
+		Console.WriteLine('File-Size:      {0}',bgm.ReadUInt32());
 		bgmS.Position+=12;//padding
 //trackC=4;
 		mid.Write(UInt32(0x4d546864));//header
@@ -151,14 +151,14 @@ public void main(){
 		Console.ReadLine();
 		
 		for(;track<trackC;++track){
-			tSzT= bgm.ReadUInt32();
-			Console.WriteLine("Track {0}; Length= {1}",track,tSzT);
+			tSzT = bgm.ReadUInt32();
+			Console.WriteLine('Track {0}; Length = {1}',track,tSzT);
 			
 			mid.Write(UInt32(0x4d54726b));//header
 			trackLenOffset=midS.Position;
 			mid.Write(UInt32(0));//len
 			
-			tdelta=0;
+			var tdelta=0;
 			channel=track;
 			for(tSzT+=bgmS.Position;bgmS.Position<tSzT-1;){
 				delta=t=0;
@@ -172,7 +172,7 @@ public void main(){
 					bgmS.Position=tSzT;
 					continue;
 				}*/
-				//Console.WriteLine("Current command: {0:x2}",cmd);
+				//Console.WriteLine('Current command: {0:x2}',cmd);
 				switch(cmd){
 					case 0x00:
 						mid.WriteDelta(delta);
@@ -197,7 +197,7 @@ public void main(){
 						break;			//Set tempo
 					case 0x0A:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x0c:
 						mid.WriteDelta(delta);
@@ -206,7 +206,7 @@ public void main(){
 						break;			//Time signature
 					case 0x0D:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x10:
 						mid.WriteDelta(delta);
@@ -231,7 +231,7 @@ public void main(){
 						break;	//Note off (prev key)
 					case 0x19:
 						t=[bgm.ReadByte(),bgm.ReadByte()];
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (2 byte extra)
 					case 0x1A:
 						mid.WriteDelta(delta);
@@ -240,29 +240,29 @@ public void main(){
 					case 0x20:
 						t=bgm.ReadByte();
 						/* Can be more then 16 programs, so cannot rely on channel=program; KH seems to follow it tho
-						if(typeof program2channel[t]!=="undefined"){
+						if(typeof program2channel[t]!=='undefined'){
 							channel=program2channel[t];
-							Console.WriteLine("  Swapping to channel {0}",channel);
+							Console.WriteLine('  Swapping to channel {0}',channel);
 							break;
 						}
 						if(channelL<16){channel=channelL;++channelL;}else{}*/
-						if(t<16){channel=t;}else{Console.WriteLine("  Program number is over 16! Using channel 0!  This is a \"optimization\" done for square games");}
+						if(t<16){channel=t;}else{Console.WriteLine('  Program number is over 16! Using channel 0!\n  This is a "optimization" done for square games');}
 						mid.WriteDelta(delta);
 						mid.WriteBytes([byte(0xC0)|channel,t]);
 						/*program2channel[t]=channel;*/
-						Console.WriteLine("  Swapping to NEW channel {0} for {1}",channel,t);
+						Console.WriteLine('  Swapping to NEW channel {0} for {1}',channel,t);
 						break;			//assign instrument / program change
 					case 0x22:
 						mid.WriteDelta(delta);
 						t=bgm.ReadByte();
 						mid.WriteBytes([byte(0xB0)|channel,7,t]);
-						Console.WriteLine("  Set volume for {0} to {1}",channel,t);
+						Console.WriteLine('  Set volume for {0} to {1}',channel,t);
 						break;			//set volume (I am positive that volume values in this driver do not align with standard MIDI. (see FFXI 213 Ru'Lude Gardens.psf2 for example))
 					case 0x24:
 						t=bgm.ReadByte();
 						mid.WriteDelta(delta);
 						mid.WriteBytes([byte(0xB0)|channel,11,t]);
-						Console.WriteLine("  Set expr-Vol for {0} to {1}",channel,t);
+						Console.WriteLine('  Set expr-Vol for {0} to {1}',channel,t);
 						break;			//expression
 					case 0x26:
 						mid.WriteDelta(delta);
@@ -270,24 +270,24 @@ public void main(){
 						break;			//pan
 					case 0x28:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x31:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x34:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: {1:x2} 0x{0:x2} {2:x2}",cmd,delta,t);
+						Console.WriteLine('Unknown command: {1:x2} 0x{0:x2} {2:x2}',cmd,delta,t);
 						mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x35:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x3E:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x3C:
 						mid.WriteDelta(delta);
@@ -295,46 +295,46 @@ public void main(){
 						break;			//Sustain Pedal
 					case 0x40:
 						t=[bgm.ReadByte(),bgm.ReadByte(),bgm.ReadByte()];
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (3 byte extra)
 					case 0x47:
 						t=[bgm.ReadByte(),bgm.ReadByte()];
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (2 byte extra)
 					case 0x48:
 						t=[bgm.ReadByte(),bgm.ReadByte(),bgm.ReadByte()];
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (3 byte extra)
 					case 0x50:
 						t=[bgm.ReadByte(),bgm.ReadByte(),bgm.ReadByte()];
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (3 byte extra)
 					case 0x58:
 						t=bgm.ReadByte();
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);mid.WriteDummy(delta);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);mid.WriteDummy(delta);
 						break;			//Unknown (1 byte extra)
 					case 0x5C:
 						 t=[bgm.ReadByte(),bgm.ReadByte()];
-						 Console.WriteLine("Not implemented: 0x{0:x2}",cmd);
+						 Console.WriteLine('Not implemented: 0x{0:x2}',cmd);
 						 mid.WriteDummy(delta);
 						//lsb,msb
 						break;		//pitch bend		I SHOULD GO BACK AND VERIFY THE RANGE OF THE PITCH BEND
 					case 0x5D:
 						t=bgm.ReadByte();
-						Console.WriteLine("Not implemented: 0x{0:x2}",cmd);
+						Console.WriteLine('Not implemented: 0x{0:x2}',cmd);
 						mid.WriteDummy(delta);
 						break;		//Portamento?
 					//case 0x60:break;	//Init?
 					//case 0x61:break;	//Init?
 					//case 0x7F:break;	//Init?
 					default:
-						Console.WriteLine("Unknown command: 0x{0:x2}",cmd);
+						Console.WriteLine('Unknown command: 0x{0:x2}',cmd);
 						mid.WriteDummy(delta);
 				}/**/
 			}
-			Console.WriteLine("  Total ticks in this track: {0}",tdelta);
+			Console.WriteLine('  Total ticks in this track: {0}',tdelta);
 			if(bgmS.Position!==tSzT){
-				Console.WriteLine("Got a bad auto-offset! ({0} ahead) Attempting to fix...",bgmS.Position-tSzT);
+				Console.WriteLine('Got a bad auto-offset! ({0} ahead) Attempting to fix...',bgmS.Position-tSzT);
 				bgmS.Position=tSzT;
 			}
 		}
