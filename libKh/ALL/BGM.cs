@@ -87,7 +87,8 @@ namespace LIBKH
 							cmd = bgm.ReadByte();
 
 							#region cases commands
-//This part need to be rewrited for c#, should take some time. Already changed some little things
+//This part need to be rewroted for c#, should take some time. Already changed some little things
+                            //If you have the time to(Xeeynamo)can you refactor this part please?^^"
 #if NOTSTABLE
 							switch (cmd)
 							{

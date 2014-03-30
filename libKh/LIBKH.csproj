@@ -45,18 +45,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ALL\BGM.cs" />
-    <Compile Include="ALL\TM2.cs" />
-    <Compile Include="IDX.cs" />
-    <Compile Include="KH1\IDX.cs" />
-    <Compile Include="KH1\IMG.cs" />
     <Compile Include="KH2\AI.cs" />
     <Compile Include="KH2\BAR.cs" />
-    <Compile Include="KH2\IDX.cs" />
     <Compile Include="KH2\IMGD_Z.cs" />
+    <Compile Include="KH1\IDX.cs" />
+    <Compile Include="KH2\IDX.cs" />
+    <Compile Include="KH1\IMG.cs" />
     <Compile Include="KH2\MSG.cs" />
     <Compile Include="KH2\PAX.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="DATA.cs" />
+    <Compile Include="ALL\TM2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ALL\BGM2MIDI.js" />
