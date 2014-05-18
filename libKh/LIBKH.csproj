@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ALL\BGM.cs" />
+    <Compile Include="ALL\VAG.cs" />
     <Compile Include="KH2\AI.cs" />
     <Compile Include="KH2\BAR.cs" />
     <Compile Include="KH2\IMGD_Z.cs" />
