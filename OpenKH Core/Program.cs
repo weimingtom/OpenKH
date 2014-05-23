@@ -64,12 +64,13 @@ namespace OpenKH_Core
                 Stream internalfile = LIBKHIDX.OpenFile(inputname);
                 Console.WriteLine("Done!");
                 Console.Write("Extracting the file...");
-                var Pathname = Path.GetFullPath("output/" + Path.GetDirectoryName(inputname));
-                Directory.CreateDirectory(Pathname);
-                var output = new FileStream(Pathname, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-                internalfile.CopyToAsync(output);
+                var inputname2 = Path.GetFullPath("output/" + inputname);
+                    Directory.CreateDirectory(Path.GetDirectoryName(inputname2));
+                    var output = new FileStream(inputname2, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
                 Console.WriteLine("Done!");
+                output.Position = 0;
                 var br = new BinaryReader(output);
+                
                 if (br.ReadUInt32() != 0x01524142)
                 {
                     Console.WriteLine("Not a BAR file, continue anyway");
