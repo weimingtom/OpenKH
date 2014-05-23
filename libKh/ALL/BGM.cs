@@ -79,10 +79,10 @@ namespace LIBKH
 						for (tSzT += bgmS.Position; bgmS.Position < tSzT - 1;)
 						{
 							delta = t = 0;
-							do
+							/*do
 							{
 								delta = (delta << 7) + ((t = bgm.ReadByte()) & 0x7F);
-							} while (t & 0x80); //I have no idea to what to do with this while
+							} while (t & 0x80);*/ //I have no idea to what to do with this while
 							tdelta += delta;
 							cmd = bgm.ReadByte();
 

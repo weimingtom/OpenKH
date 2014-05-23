@@ -16,6 +16,10 @@ namespace libKh.KH1
 
         /// <summary>Maximum characters to match - 3</summary>
         private const byte maxMatch = 255;
+
+        /// <summary>Finds the least used byte in a set of data</summary>
+        /// <param name="data">Byte array to search in</param>
+        /// <returns>Most uncommon byte</returns>
         private static byte findLeastByte(IEnumerable<byte> data)
         {
             var cnt = new uint[256];
@@ -33,8 +37,9 @@ namespace libKh.KH1
             }
             return f;
         }
+ 
         /// <summary>
-        ///     Compression method for KH1.
+        ///     Compression method of KH1.
         /// </summary>
         /// <param name="input">Byte array of the file to compress</param>
         /// <returns>Compressed file as a byte array</returns>
@@ -112,8 +117,9 @@ namespace libKh.KH1
             Console.WriteLine("  Compressed to {0:0%} of the original size!", (double)i / input.Length);
             return output;
         }
+
         /// <summary>
-        ///     Decompression method for KH1.
+        ///     Decompression method of KH1.
         /// </summary>
         /// <param name="input">Byte array of the file to decompress</param>
         /// <returns>Decompressed file as a byte array</returns>
