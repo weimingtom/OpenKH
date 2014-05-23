@@ -67,10 +67,9 @@ namespace OpenKH_Core
                 var inputname2 = Path.GetFullPath("output/" + inputname);
                     Directory.CreateDirectory(Path.GetDirectoryName(inputname2));
                     var output = new FileStream(inputname2, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+                internalfile.CopyTo(output);
                 Console.WriteLine("Done!");
-                output.Position = 0;
                 var br = new BinaryReader(output);
-                
                 if (br.ReadUInt32() != 0x01524142)
                 {
                     Console.WriteLine("Not a BAR file, continue anyway");
