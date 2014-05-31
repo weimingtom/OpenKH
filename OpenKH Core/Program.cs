@@ -1,12 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GovanifY.Utility;
 using ISO_Tools;
 using LIBKH.KH2;
+/*           TO READ BEFORE ANYTHING ELSE
+ * OpenKH is a huge project which is for now, only supported by 2 guys,
+ * GovanifY and Xeeynamo, even if I have sometimes the feeling that Xeeynamo 
+ * isn't really working on this project...
+ * Anyways, any help should be highly granted and appreciated
+ * My work isn't the clearer of the world but he's (at least) working.
+ * OpenKH is composed of 3 parts:
+ * 
+ * LibKH, which is needed for any OpenKH project because it's like a translator:
+ * We're giving to him a specific KH file, and he'll give to us a readable file
+ * 
+ * OpenKH, which is the real core of the project. He will just simply contains
+ * all things like 3d motors, etc... He will render any file and will try to imitate
+ * the original games, thanks to us who are doing some reversing on their elf, RomFS, etc...
+ * 
+ * The Editors, which will let us modify the game as we want. For now that's more likely some tests 
+ * but later this will be complete editors like a kh2mapv WAY MORE COMPLETE.
+ * 
+ * You can consider this as an utopia but I think one day this project will work, we just need time
+ * and some guys for helping us.
+ * 
+ * If you want to work on OpenKH by any ways possible, please contact me at govanify@gmail.com
+ * 
+ * Thanks for reading, Your dear romhacker and programmer, GovanifY*/
 
 namespace OpenKH_Core
 {
@@ -17,11 +37,11 @@ namespace OpenKH_Core
             Console.WriteLine("OpenKH Core / Debug Console");
             Console.WriteLine("Early Version by GovanifY");
             Console.Write("Please enter the name of the game you want to load(KH2 or KH1):");
-            var game = Console.ReadLine();
+            string game = Console.ReadLine();
             Console.Write("Please enter the name of the iso you want to load:");
-            var isoname = Console.ReadLine();
+            string isoname = Console.ReadLine();
             Console.Write("Please enter the name of the file you want to load:");
-            var inputname = @Console.ReadLine();
+            string inputname = @Console.ReadLine();
             if (game == "KH2")
             {
                 Console.Write("Trying to load the iso...");
@@ -30,10 +50,10 @@ namespace OpenKH_Core
                 Console.WriteLine("Done!");
                 Console.Write("Searching the IDX and IMG files...");
                 Stream dumb = new FileStream(@"libKh.dll", FileMode.Open, FileAccess.Read);
-                Substream IDXStream = new Substream(dumb); //Anti CS0165
-                Substream IMGStream = new Substream(dumb); //Anti CS0165
-                Substream OVLIMGStream = new Substream(dumb); //Anti CS0165
-                Substream OVLIDXStream = new Substream(dumb); //Anti CS0165
+                var IDXStream = new Substream(dumb); //Anti CS0165
+                var IMGStream = new Substream(dumb); //Anti CS0165
+                var OVLIMGStream = new Substream(dumb); //Anti CS0165
+                var OVLIDXStream = new Substream(dumb); //Anti CS0165
                 foreach (FileDescriptor file in iso)
                 {
                     string file2 = file.FullName;
@@ -64,9 +84,9 @@ namespace OpenKH_Core
                 Stream internalfile = LIBKHIDX.OpenFile(inputname);
                 Console.WriteLine("Done!");
                 Console.Write("Extracting the file...");
-                var inputname2 = Path.GetFullPath("output/" + inputname);
-                    Directory.CreateDirectory(Path.GetDirectoryName(inputname2));
-                    var output = new FileStream(inputname2, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+                string inputname2 = Path.GetFullPath("output/" + inputname);
+                Directory.CreateDirectory(Path.GetDirectoryName(inputname2));
+                var output = new FileStream(inputname2, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
                 internalfile.CopyTo(output);
                 Console.WriteLine("Done!");
                 var br = new BinaryReader(output);
@@ -77,7 +97,7 @@ namespace OpenKH_Core
                 else
                 {
                     Console.WriteLine("BAR file detected! Unbarring him...");
-                    LIBKH.KH2.BAR msgSys = new LIBKH.KH2.BAR(internalfile);
+                    var msgSys = new BAR(internalfile);
                 }
                 Console.Read();
             }
@@ -85,7 +105,6 @@ namespace OpenKH_Core
             {
                 throw new Exception("NOT IMPLEMENTED");
             }
-
-        }
         }
     }
+}
