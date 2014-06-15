@@ -48,7 +48,9 @@ ipch/
 *.psess
 *.vsp
 *.vspx
-
+# BGM and MIDI test stuff
+*.mid
+*.bgm
 # Guidance Automation Toolkit
 *.gpState
 
