@@ -10,7 +10,11 @@ namespace LIBKH
         /// </summary>
         public class BGM
         {
-            public void WriteDelta(int i)
+            public void WriteBytes(byte[] i, BinaryWriter writer)
+            {
+                writer.Write(i);
+            }
+            public void WriteDelta(int i, BinaryWriter writer)
             {
                 if (i > 0xFFFFFFF)
                 {
@@ -24,8 +28,8 @@ namespace LIBKH
                 }
                 do
                 {
-                    BinaryWriter.Write((byte) b);
-                    if ((b & 0x80) == = 0)
+                    writer.Write((byte) b);
+                    if ((b & 0x80) == 0)
                     {
                         break;
                     }
@@ -120,33 +124,31 @@ namespace LIBKH
                             switch (cmd)
                             {
                                 case 0x00:
-                                    mid.WriteDelta(delta);
-                                    mid.WriteBytes([0xFF, 0x2F, 0x00])
-                                    ;
+                                    WriteDelta(delta, mid);
+                                    var tempa = new byte[] {0xFF, 0x2F, 0x00};
+                                    WriteBytes(tempa, mid);
                                     midS.Position = trackLenOffset;
                                     mid.Write(UInt32(midS.Length - 4 - trackLenOffset)); //update len
                                     midS.Seek(0, SeekOrigin.End);
                                     break; //End of track
                                 case 0x02:
-                                    mid.WriteDelta(delta);
-                                    mid.WriteBytes([0xFF, 0x06, 9, 108, 111, 111, 112, 83, 116, 97, 114, 116])
+                                    WriteDelta(delta, mid);
+                                    var tempb = new byte[] {0xFF, 0x06, 9, 108, 111, 111, 112, 83, 116, 97, 114, 116};
+                                    WriteBytes(tempb, mid)
                                     ; //loopStart
                                     break; //Loop begin
                                 case 0x03:
-                                    mid.WriteDelta(delta);
-                                    mid.WriteBytes([0xFF, 0x06, 7, 108, 111, 111, 112, 69, 110, 100])
+                                    WriteDelta(delta, mid);
+                                    var tempc = new byte[] {0xFF, 0x06, 7, 108, 111, 111, 112, 69, 110, 100};
+                                    WriteBytes(tempc, mid)
                                     ; //loopEnd
                                     break; //Loop end
                                     //case 0x04:break;	//End of track?
                                 case 0x08:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     t = 60000000/bgm.ReadByte(); //bpm
-                                    mid.WriteBytes([0xFF, 0x51, 3, byte(t >> 16),
-                                    byte 
-                                    (t >> 8),
-                                    byte 
-                                    (t)])
-                                    ;
+                                    var tempd = new byte[] {0xFF, 0x51, 3, (byte)(t >> 16),(byte)(t >> 8),(byte)(t)};
+                                    WriteBytes(tempd, mid);
                                     break; //Set tempo
                                 case 0x0A:
                                     t = bgm.ReadByte();
@@ -154,9 +156,9 @@ namespace LIBKH
                                     mid.WriteDummy(delta);
                                     break; //Unknown (1 byte extra)
                                 case 0x0c:
-                                    mid.WriteDelta(delta);
-                                    mid.WriteBytes([0xFF, 0x58, 4, bgm.ReadByte(), bgm.ReadByte(), byte(ppqn),
-                                    8])
+                                    WriteDelta(delta, mid);
+                                    var tempe = new byte[] {0xFF, 0x58, 4, bgm.ReadByte(), bgm.ReadByte(), byte(ppqn), 8};
+                                    WriteBytes(tempe, mid)
                                     ;
                                     //Not sure if 8 is set or variable
                                     break; //Time signature
@@ -166,14 +168,13 @@ namespace LIBKH
                                     mid.WriteDummy(delta);
                                     break; //Unknown (1 byte extra)
                                 case 0x10:
-                                    mid.WriteDelta(delta);
-                                    mid.WriteBytes([byte(0x90) | channel,
-                                    lKey,
-                                    lVelocity])
-                                    ;
+                                    WriteDelta(delta, mid);
+                                    const byte a1 = 0x90;
+                                    var tempf = new byte[] {a1 | channel, lKey,lVelocity}; //TODO: Redo this shit
+                                    WriteBytes(tempf, mid);
                                     break; //play previous key, no velocity param
                                 case 0x11:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0x90) | channel,
                                     lKey = bgm.ReadByte(),
                                     lVelocity = bgm.ReadByte()])
@@ -181,21 +182,21 @@ namespace LIBKH
                                     //key,velocity
                                     break; //key on with velocity
                                 case 0x12:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0x90) | channel,
                                     lKey = bgm.ReadByte(),
                                     lVelocity])
                                     ;
                                     break; //key on with prev velocity
                                 case 0x13:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0x90) | channel,
                                     lKey,
                                     lVelocity = bgm.ReadByte()])
                                     ;
                                     break; //play previous key with velocity param
                                 case 0x18:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0x80) | channel,
                                     lKey,
                                     64])
@@ -210,7 +211,7 @@ namespace LIBKH
                                     mid.WriteDummy(delta);
                                     break; //Unknown (2 byte extra)
                                 case 0x1A:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0x80) | channel,
                                     lKey = bgm.ReadByte(),
                                     64])
@@ -237,7 +238,7 @@ namespace LIBKH
                                         " done for square games")
                                         ;
                                     }
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0xC0) | channel,
                                     t])
                                     ;
@@ -245,7 +246,7 @@ namespace LIBKH
                                     Console.WriteLine("  Swapping to NEW channel {0} for {1}", channel, t);
                                     break; //assign instrument / program change
                                 case 0x22:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     t = bgm.ReadByte();
                                     mid.WriteBytes([byte(0xB0) | channel,
                                     7,
@@ -256,7 +257,7 @@ namespace LIBKH
                                     //set volume (I am positive that volume values in this driver do not align with standard MIDI. (see FFXI 213 Ru'Lude Gardens.psf2 for example))
                                 case 0x24:
                                     t = bgm.ReadByte();
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0xB0) | channel,
                                     11,
                                     t])
@@ -264,7 +265,7 @@ namespace LIBKH
                                     Console.WriteLine("  Set expr-Vol for {0} to {1}", channel, t);
                                     break; //expression
                                 case 0x26:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0xB0) | channel,
                                     10,
                                     bgm.ReadByte()])
@@ -296,7 +297,7 @@ namespace LIBKH
                                     mid.WriteDummy(delta);
                                     break; //Unknown (1 byte extra)
                                 case 0x3C:
-                                    mid.WriteDelta(delta);
+                                    WriteDelta(delta, mid);
                                     mid.WriteBytes([byte(0xB0) | channel,
                                     64,
                                     bgm.ReadByte() > 0 ? 0x7F : 0])
