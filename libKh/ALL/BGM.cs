@@ -8,8 +8,10 @@ namespace LIBKH
 		/// <summary>
 		///     This class with convert bgm files into the midi format
 		/// </summary>
-		public sealed class BGM
+
+		public class BGM
 		{
+
 			public void GetBGM(string nme)
 			{
 				#region vars
@@ -29,6 +31,8 @@ namespace LIBKH
 				var bgm = new BinaryReader(bgmS);
 				FileStream midS = File.Open(nme + ".mid", FileMode.Create, FileAccess.Write);
 				var mid = new BinaryWriter(midS);
+                byte lKey = 0;
+			    byte lVelocity = 64;
 
 				#endregion
 
@@ -92,7 +96,6 @@ namespace LIBKH
 							#region cases commands
 //This part need to be rewroted for c#, should take some time. Already changed some little things
                             //If you have the time to(Xeeynamo)can you refactor this part please?^^"
-#if NOTSTABLE
 							switch (cmd)
 							{
 								case 0x00:
@@ -336,7 +339,6 @@ namespace LIBKH
 									Console.WriteLine("Unknown command: 0x{0:x2}", cmd);
 									mid.WriteDummy(delta);
 							}
-#endif
 
 							#endregion
 						}
