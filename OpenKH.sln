@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LIBKH", "libKh\LIBKH.csproj", "{605C4D6B-6E02-4BF3-8A91-DB2DDB3ACD8A}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAR Editor", "BAR_Editor\BAR Editor.csproj", "{85BDB507-7C21-4F58-9FE6-DB2B4FB544C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenKH Core", "OpenKH Core\OpenKH Core.csproj", "{4C340534-C7C2-4DFB-913C-1E9CF1BC3500}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BGM2MIDI", "BGM2MIDI\BGM2MIDI.csproj", "{73A33F3C-FC9E-4C4A-8CA3-476925F8CC1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{4C340534-C7C2-4DFB-913C-1E9CF1BC3500}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C340534-C7C2-4DFB-913C-1E9CF1BC3500}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C340534-C7C2-4DFB-913C-1E9CF1BC3500}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73A33F3C-FC9E-4C4A-8CA3-476925F8CC1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73A33F3C-FC9E-4C4A-8CA3-476925F8CC1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73A33F3C-FC9E-4C4A-8CA3-476925F8CC1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73A33F3C-FC9E-4C4A-8CA3-476925F8CC1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +62,6 @@ Global
 		{8D2672ED-99A2-434B-9AB2-479829638849} = {CC1207A7-6D3A-4788-800A-7A9D3C3C51C6}
 		{4217D35E-9183-42FE-96CB-0AEAF7A72447} = {CC1207A7-6D3A-4788-800A-7A9D3C3C51C6}
 		{85BDB507-7C21-4F58-9FE6-DB2B4FB544C5} = {CC1207A7-6D3A-4788-800A-7A9D3C3C51C6}
+		{73A33F3C-FC9E-4C4A-8CA3-476925F8CC1E} = {CC1207A7-6D3A-4788-800A-7A9D3C3C51C6}
 	EndGlobalSection
 EndGlobal
