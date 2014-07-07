@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="hex04BinTrack\ParseVIF1.cs" />
-    <Compile Include="hex04BinTrack\UC.cs" />
+    <Compile Include="hex04BinTrack\UC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="hex04BinTrack\VU1Mem.cs" />
     <Compile Include="khiiMapv.CollTest\Co1.cs" />
     <Compile Include="khiiMapv.CollTest\Co2.cs" />
@@ -74,13 +76,23 @@
     <Compile Include="khiiMapv\PicIMGD.cs" />
     <Compile Include="khiiMapv\PicPAX.cs" />
     <Compile Include="khiiMapv\Program.cs" />
-    <Compile Include="khiiMapv\RDForm.cs" />
+    <Compile Include="khiiMapv\RDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="khiiMapv\RDForm.Designer.cs">
+      <DependentUpon>RDForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="khiiMapv\STim.cs" />
     <Compile Include="khiiMapv\TCC.cs" />
     <Compile Include="khiiMapv\TexUt2.cs" />
     <Compile Include="khiiMapv\TFX.cs" />
     <Compile Include="khiiMapv\Vifpli.cs" />
-    <Compile Include="khiiMapv\Visf.cs" />
+    <Compile Include="khiiMapv\Visf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="khiiMapv\Visf.Designer.cs">
+      <DependentUpon>Visf.cs</DependentUpon>
+    </Compile>
     <Compile Include="khiiMapv\Wavo.cs" />
     <Compile Include="khiiMapv\WM.cs" />
     <Compile Include="khkh_xldMii.Mc\AxBone.cs" />
@@ -99,7 +111,9 @@
     <Compile Include="khkh_xldMii.V\SimaVU1e.cs" />
     <Compile Include="khkh_xldM\ReadBar.cs" />
     <Compile Include="ParseAI\Parse03.cs" />
-    <Compile Include="Readmset\HexVwer.cs" />
+    <Compile Include="Readmset\HexVwer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Readmset\PgScrollType.cs" />
     <Compile Include="Readmset\RangeMarked.cs" />
     <Compile Include="vcBinTex4\Reform32.cs" />

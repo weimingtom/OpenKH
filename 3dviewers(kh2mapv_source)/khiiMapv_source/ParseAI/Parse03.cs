@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace ParseAI
 {
     public class Parse03
     {
-        MemoryStream si;
-        BinaryReader br;
-        TextWriter wri;
+        private BinaryReader br;
+        private SortedDictionary<int, Dis> dict = new SortedDictionary<int, Dis>();
+        private SortedDictionary<int, object> errors = new SortedDictionary<int, object>();
+        private SortedDictionary<int, String> labels = new SortedDictionary<int, string>();
+        private MemoryStream si;
+        private TextWriter wri;
 
         public Parse03(TextWriter wri)
         {
@@ -38,9 +40,9 @@ namespace ParseAI
                 wri.WriteLine("#Prefix: {0:x} {1:x} {2:x}", v0, v4, v8);
             }
 
-            for (int x = 0; ; x++)
+            for (int x = 0;; x++)
             {
-                si.Position = 0x1c + 8 * x;
+                si.Position = 0x1c + 8*x;
                 int key = br.ReadInt32();
                 int off = br.ReadInt32();
                 if (key == 0 && off == 0) break;
@@ -49,9 +51,9 @@ namespace ParseAI
 
             wri.WriteLine("#Format: label: ai-code ; ai-decimal-off real-hex-off ");
 
-            for (int x = 0; ; x++)
+            for (int x = 0;; x++)
             {
-                si.Position = 0x1c + 8 * x;
+                si.Position = 0x1c + 8*x;
                 int key = br.ReadInt32();
                 int off = br.ReadInt32();
                 if (key == 0 && off == 0) break;
@@ -81,11 +83,11 @@ namespace ParseAI
                 Dis o;
                 if (dict.TryGetValue(x, out o))
                 {
-                    wri.WriteLine(" {0,-40}; {1,4} {2:x}", o.Desc, x, 0x10 + 2 * x);
+                    wri.WriteLine(" {0,-40}; {1,4} {2:x}", o.Desc, x, 0x10 + 2*x);
 
                     if (x < cx)
                     {
-                        int x1 = x + o.Len / 2;
+                        int x1 = x + o.Len/2;
                         if (dict.ContainsKey(x1) == false)
                         {
                             int x2 = dict.Keys.First(p => p > x1);
@@ -99,91 +101,12 @@ namespace ParseAI
             }
         }
 
-        SortedDictionary<int, Dis> dict = new SortedDictionary<int, Dis>();
-        SortedDictionary<int, String> labels = new SortedDictionary<int, string>();
-        SortedDictionary<int, object> errors = new SortedDictionary<int, object>();
-
-        class Dis
-        {
-            public int Len = 0;
-            public String Desc = String.Empty;
-
-            public Dis(int cb, String s)
-            {
-                this.Len = cb;
-                this.Desc = s;
-            }
-        }
-
-        class Ut
-        {
-            public static string Read0Str(BinaryReader br)
-            {
-                String s = "";
-                while (true)
-                {
-                    int v = br.ReadByte();
-                    if (v == 0)
-                        break;
-                    s += (char)v;
-                }
-                return s;
-            }
-        }
-
-        class CmdObs
-        {
-            public void Eat(int v0)
-            {
-                if (0xE0 == (255 & v0))
-                {
-                    stat = 0;
-                }
-                else if (0xC0 == (255 & v0) && stat >= 0)
-                {
-                    stat++;
-                }
-                else
-                {
-                    stat = -1;
-                }
-            }
-
-            public T Curt
-            {
-                get
-                {
-                    switch (stat)
-                    {
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
-                        case 10:
-                            return T.Label;
-                    }
-                    return T.Val;
-                }
-            }
-
-            int stat = -1;
-
-            public enum T
-            {
-                Val, Label,
-            }
-        }
-
         private void Walk(int key, int off)
         {
-            Queue<int> offq = new Queue<int>();
+            var offq = new Queue<int>();
             offq.Enqueue(off);
             labels[off] = "K" + key;
-            CmdObs obs = new CmdObs();
+            var obs = new CmdObs();
             while (offq.Count != 0)
             {
                 int nextoff = offq.Dequeue();
@@ -193,7 +116,7 @@ namespace ParseAI
 
                     if (dict.ContainsKey(off)) break;
 
-                    si.Position = 0x10 + off * 2;
+                    si.Position = 0x10 + off*2;
 
                     if (si.Position >= si.Length)
                     {
@@ -209,15 +132,17 @@ namespace ParseAI
 
                         obs.Eat(v0);
 
-                        if (false) { }
-                        // -- 16 bits cmd
-                        else if (v0 == 0xffff)
+                        if (false)
+                        {
+                        }
+                            // -- 16 bits cmd
+                        if (v0 == 0xffff)
                         {
                             dict[off] = new Dis(2, String.Format("TERM"));
                             break;
                         }
-                        // -- 8 bits cmd
-                        else if (cm8 == 0x30)
+                            // -- 8 bits cmd
+                        if (cm8 == 0x30)
                         {
                             int v2 = br.ReadByte();
                             int v3 = br.ReadByte();
@@ -256,7 +181,7 @@ namespace ParseAI
                         else if (cm8 == 0xe0)
                         {
                             int v2 = br.ReadUInt16();
-                            si.Position = 0x10 + v2 * 2;
+                            si.Position = 0x10 + v2*2;
                             dict[off] = new Dis(4, String.Format("Print {0:x2} '{1}' ", v0 >> 8, Ut.Read0Str(br)));
                             nextoff = off + 2;
                         }
@@ -264,7 +189,8 @@ namespace ParseAI
                         {
                             int v2 = br.ReadInt32();
                             int newoff = off + 3 + v2;
-                            dict[off] = new Dis(6, String.Format("Call {0:x3} {1} ; {2} ", v0 >> 4, GenLabel(newoff), v2));
+                            dict[off] = new Dis(6,
+                                String.Format("Call {0:x3} {1} ; {2} ", v0 >> 4, GenLabel(newoff), v2));
                             offq.Enqueue(newoff);
                             nextoff = off + 3;
                         }
@@ -282,7 +208,8 @@ namespace ParseAI
                             int v3 = br.ReadByte();
                             int v4 = br.ReadByte();
                             int v5 = br.ReadByte();
-                            dict[off] = new Dis(6, String.Format("Cmd00 {0:x2} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 8, v2, v3, v4, v5));
+                            dict[off] = new Dis(6,
+                                String.Format("Cmd00 {0:x2} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 8, v2, v3, v4, v5));
                             nextoff = off + 3;
                         }
 #if false
@@ -299,7 +226,8 @@ namespace ParseAI
                             int v3 = br.ReadByte();
                             int v4 = br.ReadByte();
                             int v5 = br.ReadByte();
-                            dict[off] = new Dis(6, String.Format("Cmd40 {0:x2} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 8, v2, v3, v4, v5));
+                            dict[off] = new Dis(6,
+                                String.Format("Cmd40 {0:x2} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 8, v2, v3, v4, v5));
                             nextoff = off + 3;
                         }
                         else if (cm8 == 0x89)
@@ -308,14 +236,15 @@ namespace ParseAI
                             //nextoff = off + 1;
                             break;
                         }
-                        // -- 4 bits cmd
+                            // -- 4 bits cmd
                         else if (cm4 == 0)
                         {
                             int v2 = br.ReadByte();
                             int v3 = br.ReadByte();
                             int v4 = br.ReadByte();
                             int v5 = br.ReadByte();
-                            dict[off] = new Dis(6, String.Format("Cmd0 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 4, v2, v3, v4, v5));
+                            dict[off] = new Dis(6,
+                                String.Format("Cmd0 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 4, v2, v3, v4, v5));
                             nextoff = off + 3;
                         }
                         else if (cm4 == 1)
@@ -331,7 +260,8 @@ namespace ParseAI
                             int v3 = br.ReadByte();
                             int v4 = br.ReadByte();
                             int v5 = br.ReadByte();
-                            dict[off] = new Dis(6, String.Format("Cmd2 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 4, v2, v3, v4, v5));
+                            dict[off] = new Dis(6,
+                                String.Format("Cmd2 {0:x3} {1:x2} {2:x2} {3:x2} {4:x2} ", v0 >> 4, v2, v3, v4, v5));
                             nextoff = off + 3;
                         }
                         else if (cm4 == 3)
@@ -411,7 +341,7 @@ namespace ParseAI
                             dict[off] = new Dis(2, String.Format("Cmdf {0:x3} ", v0 >> 4));
                             nextoff = off + 1;
                         }
-                        // -- unknown
+                            // -- unknown
                         else
                         {
                             dict[off] = new Dis(1, String.Format("? {0:x4} ", v0, si.Position - 2));
@@ -438,6 +368,82 @@ namespace ParseAI
                 labels[newoff] = s;
             }
             return s;
+        }
+
+        private class CmdObs
+        {
+            public enum T
+            {
+                Val,
+                Label,
+            }
+
+            private int stat = -1;
+
+            public T Curt
+            {
+                get
+                {
+                    switch (stat)
+                    {
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                            return T.Label;
+                    }
+                    return T.Val;
+                }
+            }
+
+            public void Eat(int v0)
+            {
+                if (0xE0 == (255 & v0))
+                {
+                    stat = 0;
+                }
+                else if (0xC0 == (255 & v0) && stat >= 0)
+                {
+                    stat++;
+                }
+                else
+                {
+                    stat = -1;
+                }
+            }
+        }
+
+        private class Dis
+        {
+            public String Desc = String.Empty;
+            public int Len;
+
+            public Dis(int cb, String s)
+            {
+                Len = cb;
+                Desc = s;
+            }
+        }
+
+        private class Ut
+        {
+            public static string Read0Str(BinaryReader br)
+            {
+                String s = "";
+                while (true)
+                {
+                    int v = br.ReadByte();
+                    if (v == 0)
+                        break;
+                    s += (char) v;
+                }
+                return s;
+            }
         }
     }
 }

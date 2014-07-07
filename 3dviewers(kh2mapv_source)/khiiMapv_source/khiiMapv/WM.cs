@@ -1,11 +1,10 @@
-using System;
 namespace khiiMapv
 {
-	internal enum WM
-	{
-		REPEAT,
-		CLAMP,
-		RClamp,
-		RRepeat
-	}
+    internal enum WM
+    {
+        REPEAT,
+        CLAMP,
+        RClamp,
+        RRepeat
+    }
 }

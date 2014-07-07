@@ -1,7 +1,7 @@
+using System;
+
 namespace khiiMapv.Parse02
 {
-    using System;
-
     public class StrCode
     {
         public byte[] bin;
@@ -13,8 +13,7 @@ namespace khiiMapv.Parse02
 
         public override string ToString()
         {
-            return ("<" + string.Join(" ", Array.ConvertAll<byte, string>(this.bin, b => b.ToString("x2"))) + ">\r\n");
+            return ("<" + string.Join(" ", Array.ConvertAll(bin, b => b.ToString("x2"))) + ">\r\n");
         }
     }
 }
-

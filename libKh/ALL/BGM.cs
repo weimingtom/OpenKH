@@ -7,6 +7,7 @@ namespace LIBKH
     {
         /// <summary>
         ///     This class with convert bgm files into the midi format
+        ///     WARNING: BUGGY METHOD!
         /// </summary>
         public class BGM
         {
@@ -85,7 +86,7 @@ namespace LIBKH
                     Console.WriteLine("Seq ID:         {0}", bgm.ReadUInt16());
                     Console.WriteLine("WD  ID:         {0}", bgm.ReadUInt16());
                     Console.WriteLine("# of Tracks:    {0}", trackC = bgm.ReadByte());
-                    Console.WriteLine("Unknown:        {0}", bgm.ReadBytes(3));//TODO: To modify this shit( need to show the next 3 bytes
+                    Console.WriteLine("Unknown:        {0}", bgm.ReadBytes(3));//TODO: To modify this shit (need to show the next 3 bytes)
                     Console.WriteLine("In-game volume: {0}", bgm.ReadByte());
                     Console.WriteLine("Unknown2:       {0:x2}", bgm.ReadByte());
                     Console.WriteLine("PPQN:           {0}", ppqn = bgm.ReadUInt16());
