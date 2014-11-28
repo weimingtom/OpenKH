@@ -19,3 +19,5 @@ For now we're focusing on the 2 main games, KH1(FM) and KH2(FM)
 The process's takin' long time b\c I'm(GovanifY) the one working on this project when I'm writing this words. Any request for helping can be sended on my personal mail: govanify@gmail.com
 
 The project is entirely C# but we will surely re-write it in a near future on C++.
+
+/!\THIS PROJECT IS ALMOST ABANDONNED NOW DON'T EXPECT NEW THINGS BEFORE A WHILE/!\
