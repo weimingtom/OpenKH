@@ -1,4 +1,4 @@
-OpenKH
+OpenKH(PROJECT DISCONTINUED SEE BELOW)
 ======
 OpenKH is an open source project that will allow us to 
 launch Kingdom Hearts games on pc, with builted-in editors, custom 3d motor, etc...
@@ -21,3 +21,5 @@ The process's takin' long time b\c I'm(GovanifY) the one working on this project
 The project is entirely C# but we will surely re-write it in a near future on C++.
 
 /!\THIS PROJECT IS ALMOST ABANDONNED NOW DON'T EXPECT NEW THINGS BEFORE A WHILE/!\
+
+2nd EDIT: I actually really abandonned the project, kinda makin' new shits privately but not contributing to Xeey repo anymore since I'm the only one.
